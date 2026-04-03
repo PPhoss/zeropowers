@@ -12,7 +12,7 @@ Generate complete pre-dev documentation iteratively, one document at a time with
 **Trigger symptoms:**
 - User describes a product idea or feature request
 - User asks to "plan", "design", or "document" a project
-- User mentions specific doc types: PRD, architecture, API, database, dev plan, UI specs
+- User mentions specific doc types: PRD, architecture, API, database, dev plan
 
 **Skip if:** User just wants code implementation (no pre-dev docs needed)
 
@@ -86,6 +86,6 @@ project-root/zeropowers/specs/
 | Mistake | Fix |
 |---------|-----|
 | Generating all docs at once | One doc, get feedback, repeat |
-| Wrong order | PRD → Architecture → API → DB → Dev Plan → UI |
+| Wrong order | PRD → Architecture → API → DB → Dev Plan |
 | Over-specifying | Leave room for implementation decisions |
 | Ignoring dependencies | Dev plan must reflect actual task dependencies |
