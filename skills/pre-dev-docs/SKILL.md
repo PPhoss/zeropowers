@@ -69,7 +69,7 @@ Wait for the user's response. If they request changes, make them and re-run the 
 
 ## Output Location
 ```
-project-root/docs/
+project-root/zeropowers/specs/
 ├── PRD.md / ARCHITECTURE.md / API.md / DATABASE.md / DEV_PLAN.md
 ```
 
