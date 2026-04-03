@@ -16,7 +16,7 @@ Generate complete pre-dev documentation iteratively, one document at a time with
 
 **Skip if:** User just wants code implementation (no pre-dev docs needed)
 
-**Context:** May be invoked directly by user, or by zeropowers:brainstorming after design approval. If entering from brainstorming, design decisions are already made — skip to Phase 2.
+**Context:** May be invoked directly by user, or by zeropowers:brainstorming after design approval. If entering from brainstorming, design decisions are already made — skip Phase 1.
 
 ## Document Order (Each Builds on Previous)
 
@@ -26,20 +26,11 @@ Not all projects need all 5 docs. Document selection is determined in Phase 2.
 
 ## Workflow
 
-### Phase 0: Check Existing Specs
-
-Scan `zeropowers/specs/` for existing documents before starting. For each found:
-
-1. Review completeness — search for "TBD", "TODO", "[", placeholder sections
-2. Ask user: "Found existing `{doc}.md` — reuse, revise, or regenerate?"
-
-Only generate docs the user hasn't approved. Resume from the next missing doc in order.
-
 ### Phase 1: Understand
 
 Ask targeted questions about vision, core features, tech constraints, and project scope.
 
-Skip if entering from brainstorming (design already approved).
+**Skip this phase if entering from brainstorming** (design already approved).
 
 ### Phase 2: Classify Project Type & Select Docs
 
@@ -59,26 +50,40 @@ Then select required documents based on project type:
 
 Confirm the doc list with user before proceeding. "This project needs: PRD → Architecture → Dev Plan. Sound right?"
 
-### Phase 3: Generate Iteratively
+### Phase 3: Check Existing Specs
 
-For each document in the agreed list:
+Scan `zeropowers/specs/` for existing documents — **only check for docs selected in Phase 2.** For each found:
+
+1. Review completeness — search for "TBD", "TODO", "[", placeholder sections
+2. Ask user: "Found existing `{doc}.md` — reuse, revise, or regenerate?"
+
+**Options semantics:**
+- **Reuse:** Skip generation, treat as approved for this doc
+- **Revise:** Read existing, update sections that conflict with current context
+- **Regenerate:** Start fresh from template
+
+Only generate docs the user hasn't approved. Resume from the next missing doc in order.
+
+### Phase 4: Document Generation Loop
+
+**This is the main loop.** For each document that still needs generation (after Phase 3 filtering), run steps A → B → C → D in sequence. Only advance to the next document after step D passes.
+
+#### Step A: Generate
+
 1. Read `references/template-{doc}.md`
 2. Tell user what you're generating
 3. Ask gap questions (see guidelines below)
 4. Generate using template structure
-5. **Cross-document consistency check:** Does this doc conflict with any previously generated spec? If yes, flag to user before proceeding.
-6. Get user feedback before next
 
 **Critical:** Before Architecture doc, discuss technology stack with user.
 
-**Gap questions should be:**
-- Specific to sections you can't fill from previous docs or conversation
-- Limited to 3-5 questions max per document
-- NOT questions already answered in previous docs or brainstorming
+#### Step B: Cross-Document Consistency Check
 
-### Phase 4: Spec Self-Review
+Compare with all previously generated specs. If this doc conflicts with any previous one, flag to user: "API doc assumes X, but Architecture says Y — which is correct?" Resolve before proceeding.
 
-After generating the spec document, review with fresh eyes:
+#### Step C: Self-Review
+
+Review the generated document with fresh eyes:
 
 1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
 2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
@@ -87,15 +92,24 @@ After generating the spec document, review with fresh eyes:
 
 Fix any issues inline. No need to re-review — just fix and move on.
 
-### Phase 5: User Review Gate
+#### Step D: User Review
 
-After the spec review loop passes, ask the user to review the written spec before proceeding:
+Present the spec to user for approval:
 
-> "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
+> "Spec written and committed to `<path>`. Please review and let me know if you want any changes."
 
-Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
+Wait for the user's response. If they request changes, make them and re-run Steps C → D. Only proceed to the next document once the user approves.
 
-After user approves the final spec, suggest next step:
+#### Gap Questions
+
+**Gap questions should be:**
+- Specific to sections you can't fill from previous docs or conversation
+- Limited to 3-5 questions max per document
+- NOT questions already answered in previous docs or brainstorming
+
+#### After All Documents
+
+Once the last document passes user review, suggest next step:
 
 > "Specs approved. Ready to create an implementation plan? I can invoke the writing-plans skill."
 
@@ -122,7 +136,7 @@ project-root/zeropowers/specs/
 - **No tech stack discussion before architecture** → Technology choices required first
 - **Using placeholder text instead of asking** → If missing info, ask the user
 - **Skipping user review** → Spec needs user approval before implementation
-- **Skipping self-review before user review** → You must pass Phase 4 before Phase 5
+- **Skipping self-review before user review** → You must pass Step C before Step D
 
 ## Common Mistakes
 
