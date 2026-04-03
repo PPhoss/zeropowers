@@ -30,12 +30,12 @@ Thanks!
 
 ### Claude Code Official Marketplace
 
-Superpowers is available via the [official Claude plugin marketplace](https://claude.com/plugins/superpowers)
+Superpowers is available via the [official Claude plugin marketplace](https://claude.com/plugins/zeropowers)
 
 Install the plugin from Claude marketplace:
 
 ```bash
-/plugin install superpowers@claude-plugins-official
+/plugin install zeropowers@claude-plugins-official
 ```
 
 ### Claude Code (via Plugin Marketplace)
@@ -43,13 +43,13 @@ Install the plugin from Claude marketplace:
 In Claude Code, register the marketplace first:
 
 ```bash
-/plugin marketplace add obra/superpowers-marketplace
+/plugin marketplace add obra/zeropowers-marketplace
 ```
 
 Then install the plugin from this marketplace:
 
 ```bash
-/plugin install superpowers@superpowers-marketplace
+/plugin install zeropowers@zeropowers-marketplace
 ```
 
 ### Cursor (via Plugin Marketplace)
@@ -57,17 +57,17 @@ Then install the plugin from this marketplace:
 In Cursor Agent chat, install from marketplace:
 
 ```text
-/add-plugin superpowers
+/add-plugin zeropowers
 ```
 
-or search for "superpowers" in the plugin marketplace.
+or search for "zeropowers" in the plugin marketplace.
 
 ### Codex
 
 Tell Codex:
 
 ```
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.codex/INSTALL.md
+Fetch and follow instructions from https://raw.githubusercontent.com/obra/zeropowers/refs/heads/main/.codex/INSTALL.md
 ```
 
 **Detailed docs:** [docs/README.codex.md](docs/README.codex.md)
@@ -77,7 +77,7 @@ Fetch and follow instructions from https://raw.githubusercontent.com/obra/superp
 Tell OpenCode:
 
 ```
-Fetch and follow instructions from https://raw.githubusercontent.com/obra/superpowers/refs/heads/main/.opencode/INSTALL.md
+Fetch and follow instructions from https://raw.githubusercontent.com/obra/zeropowers/refs/heads/main/.opencode/INSTALL.md
 ```
 
 **Detailed docs:** [docs/README.opencode.md](docs/README.opencode.md)
@@ -85,25 +85,25 @@ Fetch and follow instructions from https://raw.githubusercontent.com/obra/superp
 ### GitHub Copilot CLI
 
 ```bash
-copilot plugin marketplace add obra/superpowers-marketplace
-copilot plugin install superpowers@superpowers-marketplace
+copilot plugin marketplace add obra/zeropowers-marketplace
+copilot plugin install zeropowers@zeropowers-marketplace
 ```
 
 ### Gemini CLI
 
 ```bash
-gemini extensions install https://github.com/obra/superpowers
+gemini extensions install https://github.com/obra/zeropowers
 ```
 
 To update:
 
 ```bash
-gemini extensions update superpowers
+gemini extensions update zeropowers
 ```
 
 ### Verify Installation
 
-Start a new session in your chosen platform and ask for something that should trigger a skill (for example, "help me plan this feature" or "let's debug this issue"). The agent should automatically invoke the relevant superpowers skill.
+Start a new session in your chosen platform and ask for something that should trigger a skill (for example, "help me plan this feature" or "let's debug this issue"). The agent should automatically invoke the relevant zeropowers skill.
 
 ## The Basic Workflow
 
@@ -147,7 +147,7 @@ Start a new session in your chosen platform and ask for something that should tr
 
 **Meta**
 - **writing-skills** - Create new skills following best practices (includes testing methodology)
-- **using-superpowers** - Introduction to the skills system
+- **using-zeropowers** - Introduction to the skills system
 
 ## Philosophy
 
@@ -156,7 +156,7 @@ Start a new session in your chosen platform and ask for something that should tr
 - **Complexity reduction** - Simplicity as primary goal
 - **Evidence over claims** - Verify before declaring success
 
-Read more: [Superpowers for Claude Code](https://blog.fsck.com/2025/10/09/superpowers/)
+Read more: [Superpowers for Claude Code](https://blog.fsck.com/2025/10/09/zeropowers/)
 
 ## Contributing
 
@@ -174,7 +174,7 @@ See `skills/writing-skills/SKILL.md` for the complete guide.
 Skills update automatically when you update the plugin:
 
 ```bash
-/plugin update superpowers
+/plugin update zeropowers
 ```
 
 ## License
@@ -186,5 +186,5 @@ MIT License - see LICENSE file for details
 Superpowers is built by [Jesse Vincent](https://blog.fsck.com) and the rest of the folks at [Prime Radiant](https://primeradiant.com).
 
 - **Discord**: [Join us](https://discord.gg/Jd8Vphy9jq) for community support, questions, and sharing what you're building with Superpowers
-- **Issues**: https://github.com/obra/superpowers/issues
-- **Release announcements**: [Sign up](https://primeradiant.com/superpowers/) to get notified about new versions
+- **Issues**: https://github.com/obra/zeropowers/issues
+- **Release announcements**: [Sign up](https://primeradiant.com/zeropowers/) to get notified about new versions
