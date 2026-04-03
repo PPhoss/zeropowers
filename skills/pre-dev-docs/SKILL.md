@@ -40,8 +40,22 @@ For each document:
 
 **Critical:** Before Architecture doc, discuss technology stack with user.
 
-### Phase 4: Final Review
-Ensure consistency across all docs; verify dev plan matches architecture.
+### Phase 4: Spec Self-Review
+After generating the spec document, look at it with fresh eyes:
+
+1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
+2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
+3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
+4. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
+
+Fix any issues inline. No need to re-review — just fix and move on.
+
+### Phase 5: User Review Gate
+After the spec review loop passes, ask the user to review the written spec before proceeding:
+
+> "Spec written and committed to `<path>`. Please review it and let me know if you want to make any changes before we start writing out the implementation plan."
+
+Wait for the user's response. If they request changes, make them and re-run the spec review loop. Only proceed once the user approves.
 
 ## Quick Reference
 
@@ -65,7 +79,7 @@ project-root/docs/
 - **Skipping PRD** → Architecture needs requirements foundation
 - **No tech stack discussion before architecture** → Technology choices required first
 - **Using placeholder text instead of asking** → If missing info, ask the user
-- **Skipping user review** → Each doc needs approval before moving on
+- **Skipping user review** → Spec needs user approval before implementation
 
 ## Common Mistakes
 
