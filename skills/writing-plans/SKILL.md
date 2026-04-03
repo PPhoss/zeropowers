@@ -18,6 +18,34 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 **Save plans to:** `docs/zeropowers/plans/YYYY-MM-DD-<feature-name>.md`
 - (User preferences for plan location override this default)
 
+## Spec Documents Location
+
+**REQUIRED:** Before writing any plan, read ALL spec documents in:
+```
+project-root/zeropowers/specs/
+├── PRD.md              # Product Requirements Document
+├── ARCHITECTURE.md     # System Architecture
+├── API.md              # API Specifications
+├── DATABASE.md         # Database Schema
+└── DEV_PLAN.md         # Development Plan
+```
+
+All planning decisions must reference specific sections/sentences from these specs. If no specs exist yet, use **REQUIRED BACKGROUND:** zeropowers:pre-dev-docs to generate them first.
+
+## Spec Document Reference
+
+Each spec type serves a specific purpose in the planning pipeline:
+
+| Document | Purpose | Key Content |
+|----------|---------|--------------|
+| PRD | Vision & requirements | Users, features, acceptance criteria |
+| Architecture | System design | Components, tech stack, security, scaling |
+| API | Interface contract | Endpoints, auth, request/response formats |
+| Database | Data model | Schema, relationships, migrations |
+| Dev Plan | Implementation roadmap | Phases, tasks, dependencies, risks |
+
+**Dependencies:** PRD → Architecture → API → Database → Dev Plan. Each builds on the previous.
+
 ## Scope Check
 
 If the spec covers multiple independent subsystems, it should have been broken into sub-project specs during brainstorming. If it wasn't, suggest breaking this into separate plans — one per subsystem. Each plan should produce working, testable software on its own.
