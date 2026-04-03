@@ -265,7 +265,6 @@ Done!
 ## Integration
 
 **Required workflow skills:**
-- **zeropowers:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
 - **zeropowers:writing-plans** - Creates the plan this skill executes
 - **zeropowers:requesting-code-review** - Code review template for reviewer subagents
 - **zeropowers:finishing-a-development-branch** - Complete development after all tasks

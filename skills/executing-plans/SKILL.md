@@ -65,6 +65,5 @@ After all tasks complete and verified:
 ## Integration
 
 **Required workflow skills:**
-- **zeropowers:using-git-worktrees** - REQUIRED: Set up isolated workspace before starting
 - **zeropowers:writing-plans** - Creates the plan this skill executes
 - **zeropowers:finishing-a-development-branch** - Complete development after all tasks
