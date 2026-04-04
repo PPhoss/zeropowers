@@ -73,34 +73,42 @@ digraph tdd_cycle {
 Write one minimal test showing what should happen.
 
 <Good>
-```typescript
-test('retries failed operations 3 times', async () => {
-  let attempts = 0;
-  const operation = () => {
-    attempts++;
-    if (attempts < 3) throw new Error('fail');
-    return 'success';
-  };
+```java
+@Test
+void retriesFailedOperationsThreeTimes() throws Exception {
+    AtomicInteger attempts = new AtomicInteger(0);
 
-  const result = await retryOperation(operation);
+    Callable<String> operation = () -> {
+        int attempt = attempts.incrementAndGet();
+        if (attempt < 3) {
+            throw new RuntimeException("Operation failed");
+        }
+        return "success";
+    };
 
-  expect(result).toBe('success');
-  expect(attempts).toBe(3);
-});
+    String result = retryService.retry(operation);
+
+    assertThat(result).isEqualTo("success");
+    assertThat(attempts.get()).isEqualTo(3);
+}
 ```
 Clear name, tests real behavior, one thing
 </Good>
 
 <Bad>
-```typescript
-test('retry works', async () => {
-  const mock = jest.fn()
-    .mockRejectedValueOnce(new Error())
-    .mockRejectedValueOnce(new Error())
-    .mockResolvedValueOnce('success');
-  await retryOperation(mock);
-  expect(mock).toHaveBeenCalledTimes(3);
-});
+```java
+@Test
+void retryWorks() throws Exception {
+    Callable<String> mock = mock(Callable.class);
+    when(mock.call())
+        .thenThrow(new RuntimeException())
+        .thenThrow(new RuntimeException())
+        .thenReturn("success");
+
+    retryService.retry(mock);
+
+    verify(mock, times(3)).call();
+}
 ```
 Vague name, tests mock not code
 </Bad>
@@ -115,7 +123,8 @@ Vague name, tests mock not code
 **MANDATORY. Never skip.**
 
 ```bash
-npm test path/to/test.test.ts
+mvn test -Dtest=RetryServiceTest#retriesFailedOperationsThreeTimes
+# or: gradle test --tests RetryServiceTest.retriesFailedOperationsThreeTimes
 ```
 
 Confirm:
@@ -132,32 +141,49 @@ Confirm:
 Write simplest code to pass the test.
 
 <Good>
-```typescript
-async function retryOperation<T>(fn: () => Promise<T>): Promise<T> {
-  for (let i = 0; i < 3; i++) {
-    try {
-      return await fn();
-    } catch (e) {
-      if (i === 2) throw e;
+```java
+@Service
+public class RetryService {
+
+    public <T> T retry(Callable<T> operation) throws Exception {
+        Exception lastException = null;
+
+        for (int i = 0; i < 3; i++) {
+            try {
+                return operation.call();
+            } catch (Exception e) {
+                lastException = e;
+            }
+        }
+
+        throw lastException;
     }
-  }
-  throw new Error('unreachable');
 }
 ```
 Just enough to pass
 </Good>
 
 <Bad>
-```typescript
-async function retryOperation<T>(
-  fn: () => Promise<T>,
-  options?: {
-    maxRetries?: number;
-    backoff?: 'linear' | 'exponential';
-    onRetry?: (attempt: number) => void;
-  }
-): Promise<T> {
-  // YAGNI
+```java
+@Service
+public class RetryService {
+
+    private int maxRetries = 3;
+    private BackoffStrategy backoffStrategy = BackoffStrategy.FIXED;
+    private Duration initialDelay = Duration.ofMillis(100);
+
+    public <T> T retry(Callable<T> operation) throws Exception {
+        return retry(operation, RetryOptions.builder()
+            .maxRetries(maxRetries)
+            .backoffStrategy(backoffStrategy)
+            .initialDelay(initialDelay)
+            .build());
+    }
+
+    public <T> T retry(Callable<T> operation, RetryOptions options) throws Exception {
+        // YAGNI - 你不会需要它
+        return null;
+    }
 }
 ```
 Over-engineered
@@ -170,7 +196,8 @@ Don't add features, refactor other code, or "improve" beyond the test.
 **MANDATORY.**
 
 ```bash
-npm test path/to/test.test.ts
+mvn test -Dtest=RetryServiceTest#retriesFailedOperationsThreeTimes
+# or: gradle test --tests RetryServiceTest.retriesFailedOperationsThreeTimes
 ```
 
 Confirm:
@@ -292,32 +319,39 @@ Tests-first force edge case discovery before implementing. Tests-after verify yo
 **Bug:** Empty email accepted
 
 **RED**
-```typescript
-test('rejects empty email', async () => {
-  const result = await submitForm({ email: '' });
-  expect(result.error).toBe('Email required');
-});
+```java
+@Test
+void rejectsEmptyEmail() {
+    FormData formData = new FormData("");
+    ValidationError result = formValidator.validate(formData);
+    assertThat(result.getField()).isEqualTo("email");
+    assertThat(result.getMessage()).isEqualTo("Email required");
+}
 ```
 
 **Verify RED**
 ```bash
-$ npm test
-FAIL: expected 'Email required', got undefined
+$ mvn test -Dtest=FormValidatorTest#rejectsEmptyEmail
+FAIL: Expected "Email required", got null
 ```
 
 **GREEN**
-```typescript
-function submitForm(data: FormData) {
-  if (!data.email?.trim()) {
-    return { error: 'Email required' };
-  }
-  // ...
+```java
+@Service
+public class FormValidator {
+
+    public ValidationError validate(FormData data) {
+        if (data.getEmail() == null || data.getEmail().trim().isEmpty()) {
+            return new ValidationError("email", "Email required");
+        }
+        // ...
+    }
 }
 ```
 
 **Verify GREEN**
 ```bash
-$ npm test
+$ mvn test -Dtest=FormValidatorTest#rejectsEmptyEmail
 PASS
 ```
 
