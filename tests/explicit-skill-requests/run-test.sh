@@ -46,17 +46,27 @@ PROJECT_DIR="$OUTPUT_DIR/project"
 mkdir -p "$PROJECT_DIR/docs/zeropowers/plans"
 
 # Create a dummy plan file for mid-conversation tests
-cat > "$PROJECT_DIR/docs/zeropowers/plans/auth-system.md" << 'EOF'
-# Auth System Implementation Plan
-
-## Task 1: Add User Model
-Create user model with email and password fields.
-
-## Task 2: Add Auth Routes
-Create login and register endpoints.
-
-## Task 3: Add JWT Middleware
-Protect routes with JWT validation.
+cat > "$PROJECT_DIR/docs/zeropowers/plans/auth-system.json" << 'EOF'
+{
+  "title": "Auth System Implementation Plan",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Add User Model",
+      "description": "Create user model with email and password fields."
+    },
+    {
+      "id": 2,
+      "title": "Add Auth Routes",
+      "description": "Create login and register endpoints."
+    },
+    {
+      "id": 3,
+      "title": "Add JWT Middleware",
+      "description": "Protect routes with JWT validation."
+    }
+  ]
+}
 EOF
 
 # Run Claude with isolated environment

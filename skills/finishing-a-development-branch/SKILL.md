@@ -103,7 +103,7 @@ EOF
 )"
 ```
 
-Then: Cleanup worktree (Step 5)
+Report PR URL to user. Keep worktree for reference until PR is merged.
 
 #### Option 3: Keep As-Is
 
@@ -135,7 +135,7 @@ Then: Cleanup worktree (Step 5)
 
 ### Step 5: Cleanup Worktree
 
-**For Options 1, 2, 4:**
+**For Options 1 and 4 only:**
 
 Check if in worktree:
 ```bash
@@ -147,7 +147,7 @@ If yes:
 git worktree remove <worktree-path>
 ```
 
-**For Option 3:** Keep worktree.
+**For Options 2 and 3:** Keep worktree. (Option 2: PR may need follow-up. Option 3: user wants to keep it.)
 
 ## Quick Reference
 

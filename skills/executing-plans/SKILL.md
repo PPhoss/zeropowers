@@ -1,13 +1,13 @@
 ---
 name: executing-plans
-description: Use when you have a written implementation plan to execute in a separate session with review checkpoints
+description: Use when you have a feature list JSON file to execute in a separate session with review checkpoints
 ---
 
 # Executing Plans
 
 ## Overview
 
-Load plan, review critically, execute all tasks, report when complete.
+Load the feature list JSON file, review critically, execute all features sequentially, report when complete.
 
 **Announce at start:** "I'm using the executing-plans skill to implement this plan."
 
@@ -16,22 +16,40 @@ Load plan, review critically, execute all tasks, report when complete.
 ## The Process
 
 ### Step 1: Load and Review Plan
-1. Read plan file
-2. Review critically - identify any questions or concerns about the plan
+1. Read the feature list JSON file from `docs/zeropowers/plans/`
+2. Review critically — identify any questions or concerns about the features, dependencies, or acceptance criteria
 3. If concerns: Raise them with your human partner before starting
-4. If no concerns: Create TodoWrite and proceed
+4. If no concerns: Check status with feature script and proceed
 
-### Step 2: Execute Tasks
+   ```bash
+   python3 skills/subagent-driven-development/scripts/feature-manager.py status docs/zeropowers/plans/<plan>.json
+   ```
 
-For each task:
-1. Mark as in_progress
-2. Follow each step exactly (plan has bite-sized steps)
-3. Run verifications as specified
-4. Mark as completed
+### Step 2: Execute Features
+
+Use the feature manager script to get and track features:
+
+```bash
+# Get next feature (respects dependencies)
+python3 skills/subagent-driven-development/scripts/feature-manager.py next docs/zeropowers/plans/<plan>.json
+
+# Mark feature as started
+python3 skills/subagent-driven-development/scripts/feature-manager.py start docs/zeropowers/plans/<plan>.json <feature-id>
+```
+
+Then for each feature:
+1. Implement according to description and acceptance criteria (follow TDD)
+2. Verify all acceptance criteria are met
+3. Commit
+4. Mark feature as completed:
+
+   ```bash
+   python3 skills/subagent-driven-development/scripts/feature-manager.py complete docs/zeropowers/plans/<plan>.json <feature-id>
+   ```
 
 ### Step 3: Complete Development
 
-After all tasks complete and verified:
+After all features done and verified:
 - Announce: "I'm using the finishing-a-development-branch skill to complete this work."
 - **REQUIRED SUB-SKILL:** Use zeropowers:finishing-a-development-branch
 - Follow that skill to verify tests, present options, execute choice
@@ -40,8 +58,8 @@ After all tasks complete and verified:
 
 **STOP executing immediately when:**
 - Hit a blocker (missing dependency, test fails, instruction unclear)
-- Plan has critical gaps preventing starting
-- You don't understand an instruction
+- Feature has critical gaps preventing implementation
+- You don't understand an acceptance criterion
 - Verification fails repeatedly
 
 **Ask for clarification rather than guessing.**
@@ -56,14 +74,17 @@ After all tasks complete and verified:
 
 ## Remember
 - Review plan critically first
-- Follow plan steps exactly
+- Follow acceptance criteria — they define done
 - Don't skip verifications
-- Reference skills when plan says to
+- Update feature status in JSON after each completion (enables cross-session resume)
 - Stop when blocked, don't guess
 - Never start implementation on main/master branch without explicit user consent
 
 ## Integration
 
 **Required workflow skills:**
-- **zeropowers:writing-plans** - Creates the plan this skill executes
-- **zeropowers:finishing-a-development-branch** - Complete development after all tasks
+- **zeropowers:writing-plans** - Creates the feature list JSON file this skill executes
+- **zeropowers:finishing-a-development-branch** - Complete development after all features
+
+**Shared tools:**
+- **Feature manager script** (`skills/subagent-driven-development/scripts/feature-manager.py`) - Persistent feature tracking across sessions

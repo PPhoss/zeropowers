@@ -4,17 +4,47 @@ Use this template when dispatching an implementer subagent.
 
 ```
 Task tool (general-purpose):
-  description: "Implement Task N: [task name]"
+  description: "Implement [feature-id]: [function name]"
   prompt: |
-    You are implementing Task N: [task name]
+    You are implementing feature [feature-id]: [function name]
 
-    ## Task Description
+    ## Feature Description
 
-    [FULL TEXT of task from plan - paste it here, don't make subagent read file]
+    [feature.description]
+
+    ## Acceptance Criteria
+
+    [feature.acceptance_criteria — one per line, bulleted]
+
+    ## Files
+
+    You will be working with these files:
+    [feature.files — one per line, bulleted]
 
     ## Context
 
-    [Scene-setting: where this fits, dependencies, architectural context]
+    [Scene-setting: where this fits in the overall system, what dependencies
+    have already been implemented, architectural conventions to follow]
+
+    ## Spec References
+
+    [If feature.spec_refs exists and is non-empty]
+
+    This feature references the following spec sections:
+    [feature.spec_refs — one per line, formatted as "docs/zeropowers/specs/FILE.md#SECTION"]
+
+    **Lazy Loading:** You have access to the full specs at docs/zeropowers/specs/.
+    Read them ONLY if:
+    - Acceptance criteria are unclear or ambiguous
+    - You need to understand the broader system context
+    - Implementation requires architectural decisions
+
+    **How to read:** Use Read tool to access only the specific sections you need.
+    Don't read entire spec files unless necessary.
+
+    [If feature.spec_refs is empty or missing]
+
+    No spec references for this feature. Work from the acceptance criteria.
 
     ## Before You Begin
 
@@ -22,19 +52,18 @@ Task tool (general-purpose):
     - The requirements or acceptance criteria
     - The approach or implementation strategy
     - Dependencies or assumptions
-    - Anything unclear in the task description
+    - Anything unclear in the feature description
 
     **Ask them now.** Raise any concerns before starting work.
 
     ## Your Job
 
     Once you're clear on requirements:
-    1. Implement exactly what the task specifies
-    2. Write tests (following TDD if task says to)
-    3. Verify implementation works
-    4. Commit your work
-    5. Self-review (see below)
-    6. Report back
+    1. Implement the feature following TDD (write test first, watch it fail, implement, watch it pass)
+    2. Verify all acceptance criteria are met
+    3. Commit your work
+    4. Self-review (see below)
+    5. Report back
 
     Work from: [directory]
 
@@ -45,14 +74,14 @@ Task tool (general-purpose):
 
     You reason best about code you can hold in context at once, and your edits are more
     reliable when files are focused. Keep this in mind:
-    - Follow the file structure defined in the plan
+    - Follow the file list provided above
     - Each file should have one clear responsibility with a well-defined interface
-    - If a file you're creating is growing beyond the plan's intent, stop and report
-      it as DONE_WITH_CONCERNS — don't split files on your own without plan guidance
+    - If a file you're creating is growing beyond the feature's intent, stop and report
+      it as DONE_WITH_CONCERNS — don't split files on your own without guidance
     - If an existing file you're modifying is already large or tangled, work carefully
       and note it as a concern in your report
     - In existing codebases, follow established patterns. Improve code you're touching
-      the way a good developer would, but don't restructure things outside your task.
+      the way a good developer would, but don't restructure things outside your feature.
 
     ## When You're in Over Your Head
 
@@ -60,23 +89,23 @@ Task tool (general-purpose):
     no work. You will not be penalized for escalating.
 
     **STOP and escalate when:**
-    - The task requires architectural decisions with multiple valid approaches
+    - The feature requires architectural decisions with multiple valid approaches
     - You need to understand code beyond what was provided and can't find clarity
     - You feel uncertain about whether your approach is correct
-    - The task involves restructuring existing code in ways the plan didn't anticipate
+    - The feature involves restructuring existing code in ways the plan didn't anticipate
     - You've been reading file after file trying to understand the system without progress
 
     **How to escalate:** Report back with status BLOCKED or NEEDS_CONTEXT. Describe
     specifically what you're stuck on, what you've tried, and what kind of help you need.
     The controller can provide more context, re-dispatch with a more capable model,
-    or break the task into smaller pieces.
+    or break the feature into smaller pieces.
 
     ## Before Reporting Back: Self-Review
 
     Review your work with fresh eyes. Ask yourself:
 
     **Completeness:**
-    - Did I fully implement everything in the spec?
+    - Did I fully implement everything the acceptance criteria require?
     - Did I miss any requirements?
     - Are there edge cases I didn't handle?
 
@@ -92,7 +121,7 @@ Task tool (general-purpose):
 
     **Testing:**
     - Do tests actually verify behavior (not just mock behavior)?
-    - Did I follow TDD if required?
+    - Did I follow TDD?
     - Are tests comprehensive?
 
     If you find issues during self-review, fix them now before reporting.
@@ -108,6 +137,6 @@ Task tool (general-purpose):
     - Any issues or concerns
 
     Use DONE_WITH_CONCERNS if you completed the work but have doubts about correctness.
-    Use BLOCKED if you cannot complete the task. Use NEEDS_CONTEXT if you need
+    Use BLOCKED if you cannot complete the feature. Use NEEDS_CONTEXT if you need
     information that wasn't provided. Never silently produce work you're unsure about.
 ```

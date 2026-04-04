@@ -20,7 +20,7 @@ else
     exit 1
 fi
 
-if assert_contains "$output" "Load Plan\|read.*plan\|extract.*tasks" "Mentions loading plan"; then
+if assert_contains "$output" "read.*feature\|load.*plan\|extract.*feature" "Mentions loading feature list"; then
     : # pass
 else
     exit 1

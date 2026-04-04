@@ -27,20 +27,32 @@ echo ""
 cd "$PROJECT_DIR"
 
 # Create a dummy plan file
-cat > "$PROJECT_DIR/docs/zeropowers/plans/auth-system.md" << 'EOF'
-# Auth System Implementation Plan
-
-## Task 1: Add User Model
-Create user model with email and password fields.
-
-## Task 2: Add Auth Routes
-Create login and register endpoints.
-
-## Task 3: Add JWT Middleware
-Protect routes with JWT validation.
-
-## Task 4: Write Tests
-Add comprehensive test coverage.
+cat > "$PROJECT_DIR/docs/zeropowers/plans/auth-system.json" << 'EOF'
+{
+  "title": "Auth System Implementation Plan",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Add User Model",
+      "description": "Create user model with email and password fields."
+    },
+    {
+      "id": 2,
+      "title": "Add Auth Routes",
+      "description": "Create login and register endpoints."
+    },
+    {
+      "id": 3,
+      "title": "Add JWT Middleware",
+      "description": "Protect routes with JWT validation."
+    },
+    {
+      "id": 4,
+      "title": "Write Tests",
+      "description": "Add comprehensive test coverage."
+    }
+  ]
+}
 EOF
 
 # Turn 1: Start a planning conversation
@@ -59,7 +71,7 @@ echo ""
 # Turn 2: Continue with more planning detail
 echo ">>> Turn 2: Continuing planning..."
 TURN2_LOG="$OUTPUT_DIR/turn2.json"
-claude -p "Good analysis. I've already written the plan to docs/zeropowers/plans/auth-system.md. Now I'm ready to implement. What are my options for execution?" \
+claude -p "Good analysis. I've already written the plan to docs/zeropowers/plans/auth-system.json. Now I'm ready to implement. What are my options for execution?" \
     --continue \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \

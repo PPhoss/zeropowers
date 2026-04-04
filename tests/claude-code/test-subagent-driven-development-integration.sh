@@ -11,8 +11,8 @@ echo " Integration Test: subagent-driven-development"
 echo "========================================"
 echo ""
 echo "This test executes a real plan using the skill and verifies:"
-echo "  1. Plan is read once (not per task)"
-echo "  2. Full task text provided to subagents"
+echo "  1. Plan is read once (not per feature)"
+echo "  2. Full feature data provided to subagents"
 echo "  3. Subagents perform self-review"
 echo "  4. Spec compliance review before code quality"
 echo "  5. Review loops when issues found"
@@ -44,64 +44,38 @@ EOF
 
 mkdir -p src test docs/zeropowers/plans
 
-# Create a simple implementation plan
-cat > docs/zeropowers/plans/implementation-plan.md <<'EOF'
-# Test Implementation Plan
-
-This is a minimal plan to test the subagent-driven-development workflow.
-
-## Task 1: Create Add Function
-
-Create a function that adds two numbers.
-
-**File:** `src/math.js`
-
-**Requirements:**
-- Function named `add`
-- Takes two parameters: `a` and `b`
-- Returns the sum of `a` and `b`
-- Export the function
-
-**Implementation:**
-```javascript
-export function add(a, b) {
-  return a + b;
-}
-```
-
-**Tests:** Create `test/math.test.js` that verifies:
-- `add(2, 3)` returns `5`
-- `add(0, 0)` returns `0`
-- `add(-1, 1)` returns `0`
-
-**Verification:** `npm test`
-
-## Task 2: Create Multiply Function
-
-Create a function that multiplies two numbers.
-
-**File:** `src/math.js` (add to existing file)
-
-**Requirements:**
-- Function named `multiply`
-- Takes two parameters: `a` and `b`
-- Returns the product of `a` and `b`
-- Export the function
-- DO NOT add any extra features (like power, divide, etc.)
-
-**Implementation:**
-```javascript
-export function multiply(a, b) {
-  return a * b;
-}
-```
-
-**Tests:** Add to `test/math.test.js`:
-- `multiply(2, 3)` returns `6`
-- `multiply(0, 5)` returns `0`
-- `multiply(-2, 3)` returns `-6`
-
-**Verification:** `npm test`
+# Create a feature_list.json for testing
+cat > docs/zeropowers/plans/implementation-plan.json <<'EOF'
+[
+  {
+    "id": "math-001",
+    "category": "math",
+    "function": "add",
+    "description": "Create a function that adds two numbers. Function named 'add', takes parameters a and b, returns their sum. Export from src/math.js.",
+    "acceptance_criteria": [
+      "add(2, 3) returns 5",
+      "add(0, 0) returns 0",
+      "add(-1, 1) returns 0"
+    ],
+    "files": ["src/math.js", "test/math.test.js"],
+    "dependencies": [],
+    "status": "pending"
+  },
+  {
+    "id": "math-002",
+    "category": "math",
+    "function": "multiply",
+    "description": "Create a function that multiplies two numbers. Function named 'multiply', takes parameters a and b, returns their product. Add to existing src/math.js. DO NOT add any extra features like power or divide.",
+    "acceptance_criteria": [
+      "multiply(2, 3) returns 6",
+      "multiply(0, 5) returns 0",
+      "multiply(-2, 3) returns -6"
+    ],
+    "files": ["src/math.js", "test/math.test.js"],
+    "dependencies": ["math-001"],
+    "status": "pending"
+  }
+]
 EOF
 
 # Initialize git repo
@@ -121,11 +95,11 @@ OUTPUT_FILE="$TEST_PROJECT/claude-output.txt"
 
 # Create prompt file
 cat > "$TEST_PROJECT/prompt.txt" <<'EOF'
-I want you to execute the implementation plan at docs/zeropowers/plans/implementation-plan.md using the subagent-driven-development skill.
+I want you to execute the feature list at docs/zeropowers/plans/implementation-plan.json using the subagent-driven-development skill.
 
 IMPORTANT: Follow the skill exactly. I will be verifying that you:
-1. Read the plan once at the beginning
-2. Provide full task text to subagents (don't make them read files)
+1. Read the feature list once at the beginning
+2. Provide full feature data to subagents (don't make them read files)
 3. Ensure subagents do self-review before reporting
 4. Run spec compliance review before code quality review
 5. Use review loops when issues are found
@@ -136,11 +110,11 @@ EOF
 # Note: We use a longer timeout since this is integration testing
 # Use --allowed-tools to enable tool usage in headless mode
 # IMPORTANT: Run from zeropowers directory so local dev skills are available
-PROMPT="Change to directory $TEST_PROJECT and then execute the implementation plan at docs/zeropowers/plans/implementation-plan.md using the subagent-driven-development skill.
+PROMPT="Change to directory $TEST_PROJECT and then execute the feature list at docs/zeropowers/plans/implementation-plan.json using the subagent-driven-development skill.
 
 IMPORTANT: Follow the skill exactly. I will be verifying that you:
-1. Read the plan once at the beginning
-2. Provide full task text to subagents (don't make them read files)
+1. Read the feature list once at the beginning
+2. Provide full feature data to subagents (don't make them read files)
 3. Ensure subagents do self-review before reporting
 4. Run spec compliance review before code quality review
 5. Use review loops when issues are found
@@ -259,7 +233,7 @@ echo ""
 # Test 7: Git commits show proper workflow
 echo "Test 7: Git commit history..."
 commit_count=$(git -C "$TEST_PROJECT" log --oneline | wc -l)
-if [ "$commit_count" -gt 2 ]; then  # Initial + at least 2 task commits
+if [ "$commit_count" -gt 2 ]; then  # Initial + at least 2 feature commits
     echo "  [PASS] Multiple commits created ($commit_count total)"
 else
     echo "  [FAIL] Too few commits ($commit_count, expected >2)"
@@ -282,7 +256,7 @@ echo "========================================="
 echo " Token Usage Analysis"
 echo "========================================="
 echo ""
-python3 "$SCRIPT_DIR/analyze-token-usage.py" "$SESSION_FILE"
+python3 "$SCRIPT_DIR/analyze-token-usage.py" "$SESSION_FILE" 2>/dev/null || echo "  (token analysis script not available)"
 echo ""
 
 # Summary
@@ -296,8 +270,8 @@ if [ $FAILED -eq 0 ]; then
     echo "All verification tests passed!"
     echo ""
     echo "The subagent-driven-development skill correctly:"
-    echo "  ✓ Reads plan once at start"
-    echo "  ✓ Provides full task text to subagents"
+    echo "  ✓ Reads feature list once at start"
+    echo "  ✓ Provides full feature data to subagents"
     echo "  ✓ Enforces self-review"
     echo "  ✓ Runs spec compliance before code quality"
     echo "  ✓ Spec reviewer verifies independently"

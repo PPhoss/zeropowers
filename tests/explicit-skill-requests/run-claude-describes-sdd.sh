@@ -21,22 +21,32 @@ echo ""
 cd "$PROJECT_DIR"
 
 # Create a plan
-cat > "$PROJECT_DIR/docs/zeropowers/plans/auth-system.md" << 'EOF'
-# Auth System Implementation Plan
-
-## Task 1: Add User Model
-Create user model with email and password fields.
-
-## Task 2: Add Auth Routes
-Create login and register endpoints.
-
-## Task 3: Add JWT Middleware
-Protect routes with JWT validation.
+cat > "$PROJECT_DIR/docs/zeropowers/plans/auth-system.json" << 'EOF'
+{
+  "title": "Auth System Implementation Plan",
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Add User Model",
+      "description": "Create user model with email and password fields."
+    },
+    {
+      "id": 2,
+      "title": "Add Auth Routes",
+      "description": "Create login and register endpoints."
+    },
+    {
+      "id": 3,
+      "title": "Add JWT Middleware",
+      "description": "Protect routes with JWT validation."
+    }
+  ]
+}
 EOF
 
 # Turn 1: Have Claude describe execution options including SDD
 echo ">>> Turn 1: Ask Claude to describe execution options..."
-claude -p "I have a plan at docs/zeropowers/plans/auth-system.md. Tell me about my options for executing it, including what subagent-driven-development means and how it works." \
+claude -p "I have a plan at docs/zeropowers/plans/auth-system.json. Tell me about my options for executing it, including what subagent-driven-development means and how it works." \
     --model haiku \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \

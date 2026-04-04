@@ -138,54 +138,43 @@ cleanup_test_project() {
     fi
 }
 
-# Create a simple plan file for testing
+# Create a simple feature_list.json for testing
 # Usage: create_test_plan "$project_dir" "$plan_name"
 create_test_plan() {
     local project_dir="$1"
     local plan_name="${2:-test-plan}"
-    local plan_file="$project_dir/docs/zeropowers/plans/$plan_name.md"
+    local plan_file="$project_dir/docs/zeropowers/plans/$plan_name.json"
 
     mkdir -p "$(dirname "$plan_file")"
 
     cat > "$plan_file" <<'EOF'
-# Test Implementation Plan
-
-## Task 1: Create Hello Function
-
-Create a simple hello function that returns "Hello, World!".
-
-**File:** `src/hello.js`
-
-**Implementation:**
-```javascript
-export function hello() {
-  return "Hello, World!";
-}
-```
-
-**Tests:** Write a test that verifies the function returns the expected string.
-
-**Verification:** `npm test`
-
-## Task 2: Create Goodbye Function
-
-Create a goodbye function that takes a name and returns a goodbye message.
-
-**File:** `src/goodbye.js`
-
-**Implementation:**
-```javascript
-export function goodbye(name) {
-  return `Goodbye, ${name}!`;
-}
-```
-
-**Tests:** Write tests for:
-- Default name
-- Custom name
-- Edge cases (empty string, null)
-
-**Verification:** `npm test`
+[
+  {
+    "id": "hello-001",
+    "category": "greetings",
+    "function": "hello",
+    "description": "Create a simple hello function that returns 'Hello, World!'",
+    "acceptance_criteria": [
+      "Function returns 'Hello, World!' when called with no arguments"
+    ],
+    "files": ["src/hello.js", "tests/hello.test.js"],
+    "dependencies": [],
+    "status": "pending"
+  },
+  {
+    "id": "hello-002",
+    "category": "greetings",
+    "function": "goodbye",
+    "description": "Create a goodbye function that takes a name and returns a goodbye message",
+    "acceptance_criteria": [
+      "Function returns 'Goodbye, {name}!' when called with a name",
+      "Handles empty string and null gracefully"
+    ],
+    "files": ["src/goodbye.js", "tests/goodbye.test.js"],
+    "dependencies": [],
+    "status": "pending"
+  }
+]
 EOF
 
     echo "$plan_file"
