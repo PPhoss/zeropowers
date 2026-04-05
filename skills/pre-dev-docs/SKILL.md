@@ -5,146 +5,96 @@ description: Use when users present a product idea or requirement before startin
 
 # Pre-Development Documentation
 
-Generate complete pre-dev documentation iteratively, one document at a time with user feedback.
-
-## When to Use
-
-**Trigger symptoms:**
-- User describes a product idea or feature request
-- User asks to "plan", "design", or "document" a project
-- User mentions specific doc types: PRD, architecture, API, database, dev plan
-
-**Skip if:** User just wants code implementation (no pre-dev docs needed)
-
-**Context:** May be invoked directly by user, or by zeropowers:brainstorming after design approval. If entering from brainstorming, design decisions are already made — skip Phase 1.
-
-## Document Order (Each Builds on Previous)
-
-1. **PRD** → 2. **Architecture** → 3. **API** → 4. **Database** → 5. **Dev Plan**
-
-Not all projects need all 5 docs. Document selection is determined in Phase 2.
+Generate pre-dev docs iteratively: PRD → Architecture → API → Database → Dev Plan (not all required every project).
 
 ## Workflow
 
-### Phase 1: Understand
+1. **Understand** - Ask about vision, features, constraints. Skip if entering from brainstorming.
+2. **Classify** - Confirm project type, select docs from table below.
+3. **Check Existing** - Scan `docs/zeropowers/specs/` for existing docs. Ask: reuse/revise/regenerate?
 
-Ask targeted questions about vision, core features, tech constraints, and project scope.
+## Document Generation Loop
 
-**Skip this phase if entering from brainstorming** (design already approved).
+```dot
+digraph doc_loop {
+    rankdir=TB;
+    "A: Generate" -> "B: Cross-Check" -> "C: Self-Review" -> "D: User Review";
+    "D: User Review" -> "Changes?" [shape=diamond];
+    "Changes?" -> "C: Self-Review" [label="yes"];
+    "Changes?" -> "Next Doc" [label="no"];
+    "Next Doc" -> "More?" [shape=diamond];
+    "More?" -> "A: Generate" [label="yes"];
+    "More?" -> "Done" [label="no"];
+}
+```
 
-### Phase 2: Classify Project Type & Select Docs
+**CRITICAL: Complete A→B→C→D for EACH document. No skipping.**
 
-Confirm project type with user:
+### A: Generate
+Read template from `references/template-{doc}.md`, ask gap questions (max 3-5), generate.
 
-Web App / Mobile App / API Service / Full-Stack / Microservices / Desktop / CLI
+### B: Cross-Check
+Compare with previous docs. Flag conflicts to user.
 
-Then select required documents based on project type:
+### C: Self-Review (MANDATORY OUTPUT)
 
-| Project Type | PRD | Architecture | API | Database | Dev Plan |
-|-------------|-----|-------------|-----|----------|----------|
-| Web App / Full-Stack | required | required | required | required | required |
-| API Service / Microservices | required | required | required | required | required |
-| Mobile App | required | required | required | required | required |
-| CLI Tool | required | required | skip | skip | required |
-| Desktop App | required | required | optional | optional | required |
+**You MUST output this table after generating each document:**
 
-Confirm the doc list with user before proceeding. "This project needs: PRD → Architecture → Dev Plan. Sound right?"
+```
+## 📋 Self-Review: {Doc Name}
 
-### Phase 3: Check Existing Specs
+| Check | Status | Notes |
+|-------|--------|-------|
+| Placeholders | ✅/⚠️ | TBD/TODO/incomplete? |
+| Consistency | ✅/⚠️ | Contradictions? |
+| Scope | ✅/⚠️ | Focused enough? |
+| Ambiguity | ✅/⚠️ | Unclear requirements? |
 
-Scan `zeropowers/specs/` for existing documents — **only check for docs selected in Phase 2.** For each found:
+[If ⚠️: List fixes made]
+```
 
-1. Review completeness — search for "TBD", "TODO", "[", placeholder sections
-2. Ask user: "Found existing `{doc}.md` — reuse, revise, or regenerate?"
+**No table = Step C not done. Cannot proceed to D.**
 
-**Options semantics:**
-- **Reuse:** Skip generation, treat as approved for this doc
-- **Revise:** Read existing, update sections that conflict with current context
-- **Regenerate:** Start fresh from template
+### D: User Review
+Present to user:
 
-Only generate docs the user hasn't approved. Resume from the next missing doc in order.
+> "Spec written to `<path>`. Please review and let me know if you want any changes."
 
-### Phase 4: Document Generation Loop
+Wait for approval. If changes requested, redo C→D.
 
-**This is the main loop.** For each document that still needs generation (after Phase 3 filtering), run steps A → B → C → D in sequence. Only advance to the next document after step D passes.
+## Doc Selection by Project Type
 
-#### Step A: Generate
+| Type | PRD | Arch | API | DB | DevPlan |
+|------|-----|------|-----|-----|---------|
+| Web/Full-Stack/API/Mobile | ✓ | ✓ | ✓ | ✓ | ✓ |
+| CLI | ✓ | ✓ | ✗ | ✗ | ✓ |
+| Desktop | ✓ | ✓ | opt | opt | ✓ |
 
-1. Read `references/template-{doc}.md`
-2. Tell user what you're generating
-3. Ask gap questions (see guidelines below)
-4. Generate using template structure
+## Red Flags — STOP
 
-**Critical:** Before Architecture doc, discuss technology stack with user.
+- **⚠️ No Self-Review table** → CRITICAL violation. Output table NOW.
+- **Generating all docs at once** → Must iterate with user feedback.
+- **Skipping PRD** → Architecture needs requirements foundation.
 
-#### Step B: Cross-Document Consistency Check
+## Rationalizations
 
-Compare with all previously generated specs. If this doc conflicts with any previous one, flag to user: "API doc assumes X, but Architecture says Y — which is correct?" Resolve before proceeding.
+| Excuse | Reality |
+|--------|---------|
+| "I did review internally" | Internal ≠ visible. Output the table. |
+| "It's straightforward" | Simple docs still have issues. Check anyway. |
+| "User will catch issues" | Your job is quality, not pushing work to user. |
 
-#### Step C: Self-Review
-
-Review the generated document with fresh eyes:
-
-1. **Placeholder scan:** Any "TBD", "TODO", incomplete sections, or vague requirements? Fix them.
-2. **Internal consistency:** Do any sections contradict each other? Does the architecture match the feature descriptions?
-3. **Scope check:** Is this focused enough for a single implementation plan, or does it need decomposition?
-4. **Ambiguity check:** Could any requirement be interpreted two different ways? If so, pick one and make it explicit.
-
-Fix any issues inline. No need to re-review — just fix and move on.
-
-#### Step D: User Review
-
-Present the spec to user for approval:
-
-> "Spec written and committed to `<path>`. Please review and let me know if you want any changes."
-
-Wait for the user's response. If they request changes, make them and re-run Steps C → D. Only proceed to the next document once the user approves.
-
-#### Gap Questions
-
-**Gap questions should be:**
-- Specific to sections you can't fill from previous docs or conversation
-- Limited to 3-5 questions max per document
-- NOT questions already answered in previous docs or brainstorming
-
-#### After All Documents
-
-Once the last document passes user review, suggest next step:
-
-> "Specs approved. Ready to create an implementation plan? I can invoke the writing-plans skill."
-
-## Quick Reference
+## Templates
 
 | Document | Template | Key Content |
-|----------|----------|--------------|
+|----------|----------|-------------|
 | PRD | `references/template-prd.md` | Vision, users, features, acceptance criteria |
 | Architecture | `references/template-architecture.md` | Components, tech stack, security, scaling |
 | API | `references/template-api.md` | Endpoints, auth, request/response formats |
 | Database | `references/template-database.md` | Schema, relationships, migrations |
 | Dev Plan | `references/template-dev-plan.md` | Phases, tasks, dependencies, risks |
 
-## Output Location
+## Output
 ```
-project-root/docs/zeropowers/specs/
-├── PRD.md / ARCHITECTURE.md / API.md / DATABASE.md / DEV_PLAN.md
+docs/zeropowers/specs/{PRD,ARCHITECTURE,API,DATABASE,DEV_PLAN}.md
 ```
-
-## Red Flags — STOP
-
-- **Generating all docs at once** → Must be iterative with user feedback
-- **Skipping PRD** → Architecture needs requirements foundation
-- **No tech stack discussion before architecture** → Technology choices required first
-- **Using placeholder text instead of asking** → If missing info, ask the user
-- **Skipping user review** → Spec needs user approval before implementation
-- **Skipping self-review before user review** → You must pass Step C before Step D
-
-## Common Mistakes
-
-| Mistake | Fix |
-|---------|-----|
-| Generating all docs at once | One doc, get feedback, repeat |
-| Wrong order | PRD → Architecture → API → DB → Dev Plan |
-| Over-specifying | Leave room for implementation decisions |
-| Ignoring dependencies | Dev plan must reflect actual task dependencies |
-| Asking too many gap questions | Max 3-5 per document, only for real gaps |
-| Skipping consistency check | New doc must not contradict previous docs |
