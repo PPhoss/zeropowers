@@ -181,7 +181,7 @@ public class RetryService {
     }
 
     public <T> T retry(Callable<T> operation, RetryOptions options) throws Exception {
-        // YAGNI - 你不会需要它
+        // YAGNI - You Ain't Gonna Need It
         return null;
     }
 }
@@ -221,6 +221,168 @@ Keep tests green. Don't add behavior.
 ### Repeat
 
 Next failing test for next feature.
+
+## Test Levels
+
+TDD applies to **all test levels**, not just unit tests.
+
+```dot
+digraph test_levels {
+    rankdir=TB;
+    node [shape=box];
+
+    unit [label="Unit Tests\nSingle component\nFast, isolated", style=filled, fillcolor="#ccffcc"];
+    integration [label="Integration Tests\nComponent interactions\nSlower, real dependencies", style=filled, fillcolor="#ffffcc"];
+    e2e [label="End-to-End Tests\nFull system\nSlowest, production-like", style=filled, fillcolor="#ffcccc"];
+
+    unit -> integration [label="Components work\nindividually"];
+    integration -> e2e [label="Integrations\nwork"];
+}
+```
+
+**Same RED-GREEN-REFACTOR cycle. Different scope.**
+
+| Level | Scope | Speed | When to Use |
+|-------|-------|-------|-------------|
+| **Unit** | Single component | Fast (ms) | Pure logic, calculations |
+| **Integration** | Component interactions | Medium (s) | Database, API, messaging |
+| **End-to-End** | Full system | Slow (min) | Critical user journeys |
+
+## Integration Test TDD
+
+Integration tests follow the **same RED-GREEN-REFACTOR cycle**. Different scope, same discipline.
+
+### When to Write Integration Tests
+
+```dot
+digraph integration_when {
+    rankdir=TB;
+
+    start [label="Unit tests pass", shape=ellipse];
+    needs_db [label="Database/API\ninvolved?", shape=diamond];
+    needs_real [label="Need to verify\nreal behavior?", shape=diamond];
+    write_integration [label="Write integration\ntest (RED)", shape=box];
+    continue_unit [label="Continue with\nunit tests", shape=box];
+
+    start -> needs_db;
+    needs_db -> needs_real [label="yes"];
+    needs_db -> continue_unit [label="no"];
+    needs_real -> write_integration [label="yes"];
+    needs_real -> continue_unit [label="no"];
+}
+```
+
+Write integration tests when:
+- Components interact with databases, message queues, external APIs
+- Unit tests with mocks don't prove real behavior
+- Configuration, connection strings, serialization matter
+
+
+### Integration Test Examples
+
+<Good>
+```java
+@SpringBootTest
+@Testcontainers
+class UserMapperIntegrationTest {
+
+    @Container
+    @ServiceConnection
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Test
+    void insertsAndFindsUser() {
+        User user = new User("alice@example.com", "Alice");
+
+        userMapper.insert(user);  // Not implemented yet
+
+        User found = userMapper.findByEmail("alice@example.com");
+        assertThat(found.getName()).isEqualTo("Alice");
+    }
+}
+```
+@SpringBootTest loads real MyBatis context, @Testcontainers provides real PostgreSQL, @ServiceConnection auto-configures datasource
+</Good>
+
+<Bad>
+```java
+@Test
+void userMapperWorks() {
+    UserMapper mockMapper = mock(UserMapper.class);
+    when(mockMapper.findByEmail(any())).thenReturn(new User());
+
+    UserService service = new UserService(mockMapper);
+    service.createUser("test@example.com");
+
+    verify(mockMapper).insert(any());  // Testing mock behavior
+}
+```
+This is a unit test, not integration. Mocking defeats the purpose.
+</Bad>
+
+### Integration Test Anti-Patterns
+
+| Anti-Pattern | Problem | Fix |
+|--------------|---------|-----|
+| Mocking in integration test | Tests mock, not real behavior | Use real DB/containers |
+| Integration test for pure logic | Slow, unnecessary | Use unit test |
+| Shared state between tests | Tests affect each other | Clean DB before each test |
+| No cleanup after tests | Data pollution | Use @BeforeEach/@AfterEach |
+
+### Multi-Level TDD Workflow
+
+**Important:** This workflow is **per-feature**, not per-project. Complete unit + integration tests for one feature before moving to the next.
+
+```dot
+digraph multi_level_tdd {
+    rankdir=LR;
+    node [shape=box];
+
+    subgraph cluster_unit {
+        label="Unit Level (per feature)";
+        style=filled;
+        color="#e8f5e9";
+
+        unit_red [label="RED\nUnit test"];
+        unit_green [label="GREEN\nImplementation"];
+        unit_refactor [label="REFACTOR"];
+
+        unit_red -> unit_green -> unit_refactor;
+    }
+
+    subgraph cluster_integration {
+        label="Integration Level (per feature)";
+        style=filled;
+        color="#fff8e1";
+
+        int_red [label="RED\nIntegration test"];
+        int_green [label="GREEN\nWiring"];
+        int_refactor [label="REFACTOR"];
+
+        int_red -> int_green -> int_refactor;
+    }
+
+    subgraph cluster_next {
+        label="Next Feature";
+        style=filled;
+        color="#f5f5f5";
+
+        next_unit [label="RED\nUnit test"];
+    }
+
+    unit_refactor -> int_red [label="Unit tests\npass"];
+    int_refactor -> next_unit [label="Feature\ncomplete"];
+}
+```
+
+**Per-Feature Workflow:**
+1. Write unit tests for the feature's component logic (fast feedback)
+2. When unit tests pass, write integration test for this feature
+3. Implement wiring to pass integration test
+4. Refactor, then move to **next feature** (back to unit tests)
 
 ## Good Tests
 
@@ -295,6 +457,10 @@ Tests-first force edge case discovery before implementing. Tests-after verify yo
 | "TDD will slow me down" | TDD faster than debugging. Pragmatic = test-first. |
 | "Manual test faster" | Manual doesn't prove edge cases. You'll re-test every change. |
 | "Existing code has no tests" | You're improving it. Add tests for existing code. |
+| "Integration tests are slow, skip them" | Slow tests find bugs unit tests miss. Run before commit. |
+| "I'll add integration tests later" | Later = never. Write them as part of TDD cycle. |
+| "Unit tests with mocks cover everything" | Mocks lie. Real databases behave differently. |
+| "Integration tests are hard to set up" | Test containers make it easy. Invest in tooling. |
 
 ## Red Flags - STOP and Start Over
 
@@ -303,6 +469,9 @@ Tests-first force edge case discovery before implementing. Tests-after verify yo
 - Test passes immediately
 - Can't explain why test failed
 - Tests added "later"
+- Mocking in integration tests
+- "Integration tests are slow, I'll skip them"
+- "I'll add integration tests after"
 - Rationalizing "just this once"
 - "I already manually tested it"
 - "Tests after achieve the same purpose"
@@ -366,6 +535,8 @@ Before marking work complete:
 - [ ] Watched each test fail before implementing
 - [ ] Each test failed for expected reason (feature missing, not typo)
 - [ ] Wrote minimal code to pass each test
+- [ ] Integration tests cover database/API interactions
+- [ ] Integration tests use real dependencies (not mocks)
 - [ ] All tests pass
 - [ ] Output pristine (no errors, warnings)
 - [ ] Tests use real code (mocks only if unavoidable)
