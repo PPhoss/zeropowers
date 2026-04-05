@@ -31,8 +31,8 @@
 
 - **Responsibility**: [What this component does]
 - **Technology Stack**:
-  - Language/Framework: [e.g., Node.js + Express]
-  - Database: [e.g., PostgreSQL]
+  - Language/Framework: [e.g., Java 17 + Spring Boot]
+  - Database: [e.g., PostgreSQL, MySQL]
   - Other tools: [e.g., Redis for caching]
 - **Key Modules**:
   - [Module 1]: [Purpose]
@@ -55,27 +55,37 @@
 
 | Layer | Technology | Justification |
 |-------|------------|---------------|
-| Frontend | [e.g., React] | [Why chosen] |
-| Backend | [e.g., Node.js] | [Why chosen] |
-| Database | [e.g., PostgreSQL] | [Why chosen] |
+| Frontend | [e.g., React, Vue] | [Why chosen] |
+| Backend | [e.g., Spring Boot] | [Why chosen] |
+| Database | [e.g., PostgreSQL, MySQL] | [Why chosen] |
 | Cache | [e.g., Redis] | [Why chosen] |
-| Hosting | [e.g., AWS] | [Why chosen] |
+| Hosting | [e.g., AWS, Kubernetes] | [Why chosen] |
 
-## 5. Security Architecture
+## 5. Development Infrastructure
+
+| Category | Tool | Purpose |
+|----------|------|---------|
+| Unit Testing | [e.g., JUnit 5, Mockito] | [Test coverage goal, mocking strategy] |
+| Integration Testing | [e.g., Testcontainers, MockMvc] | [E2E/API test scope, test profile config] |
+| Database Migration | [e.g., Flyway, Liquibase] | [Versioning strategy, rollback approach] |
+| CI/CD | [e.g., Jenkins, GitHub Actions] | [Pipeline stages, deployment triggers] |
+| Code Quality | [e.g., Checkstyle, SonarQube] | [Linting rules, code coverage threshold] |
+
+## 6. Security Architecture
 
 - **Authentication**: [How users prove identity]
 - **Authorization**: [How permissions are enforced]
 - **Data Protection**: [Encryption, secure storage]
 - **API Security**: [Rate limiting, input validation]
 
-## 6. Scalability Considerations
+## 7. Scalability Considerations
 
 [How the system will handle growth]
 
-## 7. Monitoring and Logging
+## 8. Monitoring and Logging
 
 [How you'll observe system health and debug issues]
 
-## 8. Disaster Recovery
+## 9. Disaster Recovery
 
 [Backup strategy, failover plans]
