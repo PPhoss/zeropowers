@@ -125,7 +125,7 @@ Once the last document passes user review, suggest next step:
 
 ## Output Location
 ```
-project-root/zeropowers/specs/
+project-root/docs/zeropowers/specs/
 ├── PRD.md / ARCHITECTURE.md / API.md / DATABASE.md / DEV_PLAN.md
 ```
 
