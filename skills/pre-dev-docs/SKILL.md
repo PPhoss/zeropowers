@@ -36,24 +36,35 @@ Read template from `references/template-{doc}.md`, ask gap questions (max 3-5), 
 ### B: Cross-Check
 Compare with previous docs. Flag conflicts to user.
 
-### C: Self-Review (MANDATORY OUTPUT)
+### C: Self-Review
 
-**You MUST output this table after generating each document:**
+**Step 1: Read and scan the document you just generated. Check each item:**
+
+| Check | What to scan for |
+|-------|------------------|
+| Placeholders | Search for "TBD", "TODO", "[", incomplete sections |
+| Consistency | Read through — do any sections contradict each other? |
+| Scope | Is this focused enough, or trying to do too much? |
+| Ambiguity | Could any requirement be interpreted two ways? |
+
+**Step 2: Fix any issues found. Edit the document inline.**
+
+**Step 3: Output this table to confirm you completed the review:**
 
 ```
 ## 📋 Self-Review: {Doc Name}
 
 | Check | Status | Notes |
 |-------|--------|-------|
-| Placeholders | ✅/⚠️ | TBD/TODO/incomplete? |
-| Consistency | ✅/⚠️ | Contradictions? |
-| Scope | ✅/⚠️ | Focused enough? |
-| Ambiguity | ✅/⚠️ | Unclear requirements? |
+| Placeholders | ✅/⚠️ | [what you found] |
+| Consistency | ✅/⚠️ | [what you found] |
+| Scope | ✅/⚠️ | [what you found] |
+| Ambiguity | ✅/⚠️ | [what you found] |
 
-[If ⚠️: List fixes made]
+[If ⚠️: What you fixed]
 ```
 
-**No table = Step C not done. Cannot proceed to D.**
+**The table is proof of review, not the review itself. You must actually scan the document first.**
 
 ### D: User Review
 Present to user:
