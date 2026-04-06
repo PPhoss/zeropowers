@@ -40,18 +40,79 @@
 - **External Dependencies**: [Third-party services, libraries]
 - **Deployment**: [How and where this runs]
 
-## 3. Component Interactions
+## 3. Project Structure
 
-### 3.1 Communication Patterns
+### 3.1 Repository Layout
+
+```
+project-root/
+├── backend/                # Backend service
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/
+│   │   │   │   └── com/example/
+│   │   │   │       ├── config/       # Configuration classes
+│   │   │   │       ├── controller/   # REST controllers
+│   │   │   │       ├── service/      # Business logic
+│   │   │   │       ├── repository/   # Data access
+│   │   │   │       ├── model/        # Domain entities
+│   │   │   │       └── dto/          # Data transfer objects
+│   │   │   └── resources/
+│   │   │       ├── application.yml
+│   │   │       └── db/migration/     # Flyway/Liquibase scripts
+│   │   └── test/
+│   ├── pom.xml / build.gradle
+│   └── README.md
+│
+├── frontend/               # Frontend application
+│   ├── src/
+│   │   ├── components/     # Reusable UI components
+│   │   ├── pages/          # Page-level components
+│   │   ├── hooks/          # Custom hooks
+│   │   ├── services/       # API calls
+│   │   ├── stores/         # State management
+│   │   ├── utils/          # Utility functions
+│   │   └── styles/         # Global styles
+│   ├── public/
+│   ├── package.json
+│   └── README.md
+│
+├── mobile/                 # Mobile app (optional)
+│   ├── src/
+│   │   ├── screens/        # Screen components
+│   │   ├── components/     # Reusable components
+│   │   ├── navigation/     # Navigation config
+│   │   ├── services/       # API calls
+│   │   └── utils/          # Utilities
+│   └── README.md
+│
+├── docs/                   # Documentation
+│   └── zeropowers/
+│       ├── specs/          # Pre-dev specs (this doc)
+│       └── plans/          # Implementation plans
+│
+└── scripts/                # Build/deploy scripts
+```
+
+### 3.2 Key Directory Decisions
+
+| Decision | Rationale |
+|----------|-----------|
+| [e.g., Monorepo structure] | [Why backend/frontend/mobile are separate] |
+| [e.g., Feature-based grouping] | [Why components organized by feature] |
+
+## 4. Component Interactions
+
+### 4.1 Communication Patterns
 [How components talk to each other - REST, GraphQL, message queues, etc.]
 
-### 3.2 Data Flow
+### 4.2 Data Flow
 [Describe how data moves through the system for key operations]
 
-### 3.3 Integration Points
+### 4.3 Integration Points
 [External APIs, webhooks, third-party services]
 
-## 4. Technology Stack Summary
+## 5. Technology Stack Summary
 
 | Layer | Technology | Justification |
 |-------|------------|---------------|
@@ -61,7 +122,7 @@
 | Cache | [e.g., Redis] | [Why chosen] |
 | Hosting | [e.g., AWS, Kubernetes] | [Why chosen] |
 
-## 5. Development Infrastructure
+## 6. Development Infrastructure
 
 | Category | Tool | Purpose |
 |----------|------|---------|
@@ -71,21 +132,21 @@
 | CI/CD | [e.g., Jenkins, GitHub Actions] | [Pipeline stages, deployment triggers] |
 | Code Quality | [e.g., Checkstyle, SonarQube] | [Linting rules, code coverage threshold] |
 
-## 6. Security Architecture
+## 7. Security Architecture
 
 - **Authentication**: [How users prove identity]
 - **Authorization**: [How permissions are enforced]
 - **Data Protection**: [Encryption, secure storage]
 - **API Security**: [Rate limiting, input validation]
 
-## 7. Scalability Considerations
+## 8. Scalability Considerations
 
 [How the system will handle growth]
 
-## 8. Monitoring and Logging
+## 9. Monitoring and Logging
 
 [How you'll observe system health and debug issues]
 
-## 9. Disaster Recovery
+## 10. Disaster Recovery
 
 [Backup strategy, failover plans]
