@@ -412,6 +412,7 @@ Done!
 
 **Subagents should use:**
 - **zeropowers:test-driven-development** - Subagents follow TDD for each feature
+- **zeropowers:integration-testing** - Integration and E2E tests after unit tests pass
 
 **Alternative workflow:**
 - **zeropowers:executing-plans** - Use for parallel session instead of same-session execution

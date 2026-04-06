@@ -75,7 +75,7 @@ Write one minimal test showing what should happen.
 <Good>
 ```java
 @Test
-void retriesFailedOperationsThreeTimes() throws Exception {
+void shouldRetryThreeTimes_WhenOperationFails() throws Exception {
     AtomicInteger attempts = new AtomicInteger(0);
 
     Callable<String> operation = () -> {
@@ -92,7 +92,7 @@ void retriesFailedOperationsThreeTimes() throws Exception {
     assertThat(attempts.get()).isEqualTo(3);
 }
 ```
-Clear name, tests real behavior, one thing
+Clear name: should + what + when
 </Good>
 
 <Bad>
@@ -316,50 +316,6 @@ Tests-first force edge case discovery before implementing. Tests-after verify yo
 
 **All of these mean: Delete code. Start over with TDD.**
 
-## Example: Bug Fix
-
-**Bug:** Empty email accepted
-
-**RED**
-```java
-@Test
-void rejectsEmptyEmail() {
-    FormData formData = new FormData("");
-    ValidationError result = formValidator.validate(formData);
-    assertThat(result.getField()).isEqualTo("email");
-    assertThat(result.getMessage()).isEqualTo("Email required");
-}
-```
-
-**Verify RED**
-```bash
-$ mvn test -Dtest=FormValidatorTest#rejectsEmptyEmail
-FAIL: Expected "Email required", got null
-```
-
-**GREEN**
-```java
-@Service
-public class FormValidator {
-
-    public ValidationError validate(FormData data) {
-        if (data.getEmail() == null || data.getEmail().trim().isEmpty()) {
-            return new ValidationError("email", "Email required");
-        }
-        // ...
-    }
-}
-```
-
-**Verify GREEN**
-```bash
-$ mvn test
-PASS (all tests)
-```
-
-**REFACTOR**
-Extract validation for multiple fields if needed.
-
 ## Verification Checklist
 
 Before marking work complete:
@@ -396,6 +352,19 @@ When adding mocks or test utilities, read @testing-anti-patterns.md to avoid com
 - Testing mock behavior instead of real behavior
 - Adding test-only methods to production classes
 - Mocking without understanding dependencies
+
+## After Unit Tests Pass
+
+**Need integration tests when:**
+- Multiple components interact
+- Database/external API involved
+- Business-critical workflow
+
+**Skip if:**
+- Pure logic, no external deps
+- Already covered by unit tests
+
+**Use zeropowers:integration-testing** when needed.
 
 ## Final Rule
 
