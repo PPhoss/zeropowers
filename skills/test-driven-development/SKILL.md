@@ -193,21 +193,23 @@ Don't add features, refactor other code, or "improve" beyond the test.
 
 ### Verify GREEN - Watch It Pass
 
-**MANDATORY.**
+**MANDATORY. Run full test suite to catch regressions.**
 
 ```bash
-mvn test -Dtest=RetryServiceTest#retriesFailedOperationsThreeTimes
-# or: gradle test --tests RetryServiceTest.retriesFailedOperationsThreeTimes
+mvn test
+# or: gradle test
 ```
 
 Confirm:
-- Test passes
-- Other tests still pass
+- New test passes
+- All other tests still pass
 - Output pristine (no errors, warnings)
 
-**Test fails?** Fix code, not test.
+**New test fails?** Fix code, not test.
 
-**Other tests fail?** Fix now.
+**Other tests fail?** Fix now. You broke something.
+
+**Why full suite?** Running only the new test hides regressions. New code often breaks old tests.
 
 ### REFACTOR - Clean Up
 
@@ -351,8 +353,8 @@ public class FormValidator {
 
 **Verify GREEN**
 ```bash
-$ mvn test -Dtest=FormValidatorTest#rejectsEmptyEmail
-PASS
+$ mvn test
+PASS (all tests)
 ```
 
 **REFACTOR**
