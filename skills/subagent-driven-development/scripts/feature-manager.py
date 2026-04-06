@@ -24,8 +24,8 @@ def load_plan(plan_path: str) -> List[Dict]:
 
 def save_plan(plan_path: str, features: List[Dict]):
     """Save feature list back to JSON file."""
-    with open(plan_path, 'w') as f:
-        json.dump(features, f, indent=2)
+    with open(plan_path, 'w', encoding='utf-8') as f:
+        json.dump(features, f, indent=2, ensure_ascii=False)
 
 
 def get_feature_by_id(features: List[Dict], feature_id: str) -> Optional[Dict]:
