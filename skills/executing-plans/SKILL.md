@@ -38,10 +38,11 @@ python3 skills/subagent-driven-development/scripts/feature-manager.py start docs
 ```
 
 Then for each feature:
-1. Implement according to description and acceptance criteria (follow TDD)
-2. Verify all acceptance criteria are met
-3. Commit
-4. Mark feature as completed:
+1. Invoke `zeropowers:test-driven-development` via the Skill tool before writing any code — do NOT attempt TDD from memory
+2. Follow the loaded TDD skill's Red-Green-Refactor workflow exactly
+3. Verify all acceptance criteria are met
+4. Commit
+5. Mark feature as completed:
 
    ```bash
    python3 skills/subagent-driven-development/scripts/feature-manager.py complete docs/zeropowers/plans/<plan>.json <feature-id>
