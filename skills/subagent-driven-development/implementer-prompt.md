@@ -56,14 +56,24 @@ Task tool (general-purpose):
 
     **Ask them now.** Raise any concerns before starting work.
 
+    ## MANDATORY: Use TDD Skill
+
+    Before writing any code, you MUST invoke the TDD skill to load the full test-driven development workflow:
+
+    Use the Skill tool with: `zeropowers:test-driven-development`
+
+    This is not optional. The skill provides the complete Red-Green-Refactor cycle with specific verification gates
+    that you must follow. Do NOT attempt TDD from memory — load the skill first.
+
     ## Your Job
 
     Once you're clear on requirements:
-    1. Implement the feature following TDD (write test first, watch it fail, implement, watch it pass)
-    2. Verify all acceptance criteria are met
-    3. Commit your work
-    4. Self-review (see below)
-    5. Report back
+    1. Invoke `zeropowers:test-driven-development` via the Skill tool
+    2. Follow the loaded TDD skill's workflow exactly
+    3. Verify all acceptance criteria are met
+    4. Commit your work
+    5. Self-review (see below)
+    6. Report back
 
     Work from: [directory]
 
