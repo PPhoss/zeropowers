@@ -21,26 +21,31 @@ Authorization: Bearer <token>
 
 ### 1.3 Response Format
 
+All API responses follow a unified `code` / `message` / `data` structure:
+
 **Success Response:**
 ```json
 {
-  "success": true,
-  "data": { ... },
-  "message": "Operation successful"
+  "code": 200,
+  "message": "success",
+  "data": { ... }
 }
 ```
 
 **Error Response:**
 ```json
 {
-  "success": false,
-  "error": {
-    "code": "ERROR_CODE",
-    "message": "Human-readable error message",
-    "details": { ... }
-  }
+  "code": 400,
+  "message": "Human-readable error description",
+  "data": null
 }
 ```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `code` | `number` | Business status code. `200` means success; other values indicate specific errors (e.g., `400`, `401`, `404`, `500`) |
+| `message` | `string` | Human-readable result description |
+| `data` | `any` \| `null` | Response payload on success; `null` on error |
 
 ### 1.4 HTTP Status Codes
 - `200 OK` - Success
@@ -93,7 +98,8 @@ Content-Type: application/json
 **Response (200 OK):**
 ```json
 {
-  "success": true,
+  "code": 200,
+  "message": "success",
   "data": {
     "field1": "value",
     "field2": 123
