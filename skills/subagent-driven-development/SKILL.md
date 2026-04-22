@@ -143,9 +143,19 @@ python3 skills/subagent-driven-development/scripts/feature-manager.py blocked op
    # Updates JSON: status → "done"
    ```
 
-## Lazy Loading Strategy
+## Document Loading Strategy
 
-**Specs are lazy-loaded by subagents, not pre-loaded by controller.**
+**Hybrid approach: mandatory docs + lazy-loaded specs.**
+
+### Mandatory Documents
+
+Every subagent MUST read these two files before starting work:
+- `openspec/changes/<dir>/design.md` — system design and architecture
+- `openspec/changes/<dir>/proposal.md` — product requirements and proposal
+
+**Why mandatory:** These define the "why" and overall architecture. Without them, subagents risk contradicting the design or missing product intent.
+
+### Lazy-Loaded Specs (loaded by subagents as needed)
 
 Controller provides:
 - Feature data (description, acceptance_criteria, files)
@@ -157,13 +167,7 @@ Subagents decide:
 - Which sections to read (only what's relevant)
 - When to read (before implementation, or when stuck)
 
-**Why lazy loading:**
-- Saves tokens: Most features don't need full spec context
-- Faster dispatch: Controller doesn't wait for spec reads
-- Subagent autonomy: They read what they need, when they need it
-- Avoids overloading: Implementers focus on feature, not entire system
-
-**Controller's job:** Provide the map (spec paths), not the territory (spec content).
+**Controller's job:** Tell subagents the mandatory file paths and the spec reference paths. Subagents read mandatory docs first, then lazy-load other specs as needed.
 
 ## Model Selection
 

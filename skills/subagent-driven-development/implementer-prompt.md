@@ -26,6 +26,15 @@ Task tool (general-purpose):
     [Scene-setting: where this fits in the overall system, what dependencies
     have already been implemented, architectural conventions to follow]
 
+    ## Mandatory Documents (MUST read before starting)
+
+    Read these files first, before writing any code:
+    - openspec/changes/<dir>/design.md — system design and architecture
+    - openspec/changes/<dir>/proposal.md — product requirements and proposal
+
+    These define the "why" and overall architecture. You need this context to
+    make correct implementation decisions.
+
     ## Spec References
 
     [If feature.spec_refs exists and is non-empty]
