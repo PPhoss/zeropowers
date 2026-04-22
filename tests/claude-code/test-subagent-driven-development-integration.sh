@@ -42,10 +42,10 @@ cat > package.json <<'EOF'
 }
 EOF
 
-mkdir -p src test docs/zeropowers/plans
+mkdir -p src test openspec/changes/implementation
 
 # Create a feature_list.json for testing
-cat > docs/zeropowers/plans/implementation-plan.json <<'EOF'
+cat > openspec/changes/implementation/plan.json <<'EOF'
 [
   {
     "id": "math-001",
@@ -95,7 +95,7 @@ OUTPUT_FILE="$TEST_PROJECT/claude-output.txt"
 
 # Create prompt file
 cat > "$TEST_PROJECT/prompt.txt" <<'EOF'
-I want you to execute the feature list at docs/zeropowers/plans/implementation-plan.json using the subagent-driven-development skill.
+I want you to execute the feature list at openspec/changes/implementation/plan.json using the subagent-driven-development skill.
 
 IMPORTANT: Follow the skill exactly. I will be verifying that you:
 1. Read the feature list once at the beginning
@@ -110,7 +110,7 @@ EOF
 # Note: We use a longer timeout since this is integration testing
 # Use --allowed-tools to enable tool usage in headless mode
 # IMPORTANT: Run from zeropowers directory so local dev skills are available
-PROMPT="Change to directory $TEST_PROJECT and then execute the feature list at docs/zeropowers/plans/implementation-plan.json using the subagent-driven-development skill.
+PROMPT="Change to directory $TEST_PROJECT and then execute the feature list at openspec/changes/implementation/plan.json using the subagent-driven-development skill.
 
 IMPORTANT: Follow the skill exactly. I will be verifying that you:
 1. Read the feature list once at the beginning

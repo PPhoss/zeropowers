@@ -31,12 +31,12 @@ chmod +x skills/subagent-driven-development/scripts/feature-manager.py
 ### Check Status
 
 ```bash
-python3 skills/subagent-driven-development/scripts/feature-manager.py status docs/zeropowers/plans/<plan>.json
+python3 skills/subagent-driven-development/scripts/feature-manager.py status openspec/changes/<dir>/plan.json
 ```
 
 Output:
 ```
-Feature List Status: docs/zeropowers/plans/auth.json
+Feature List Status: openspec/changes/<dir>/plan.json
   Total: 5
   ✅ Done: 1
   🔄 In Progress: 1
@@ -53,7 +53,7 @@ Progress: 20.0%
 ### Get Next Feature
 
 ```bash
-python3 skills/subagent-driven-development/scripts/feature-manager.py next docs/zeropowers/plans/<plan>.json
+python3 skills/subagent-driven-development/scripts/feature-manager.py next openspec/changes/<dir>/plan.json
 ```
 
 Returns the next feature to work on, respecting:
@@ -83,7 +83,7 @@ Files:
 ### Start Feature
 
 ```bash
-python3 skills/subagent-driven-development/scripts/feature-manager.py start docs/zeropowers/plans/<plan>.json auth-002
+python3 skills/subagent-driven-development/scripts/feature-manager.py start openspec/changes/<dir>/plan.json auth-002
 ```
 
 Updates JSON:
@@ -97,7 +97,7 @@ Updates JSON:
 ### Complete Feature
 
 ```bash
-python3 skills/subagent-driven-development/scripts/feature-manager.py complete docs/zeropowers/plans/<plan>.json auth-002
+python3 skills/subagent-driven-development/scripts/feature-manager.py complete openspec/changes/<dir>/plan.json auth-002
 ```
 
 Updates JSON:
@@ -111,7 +111,7 @@ Updates JSON:
 ### List Blocked Features
 
 ```bash
-python3 skills/subagent-driven-development/scripts/feature-manager.py blocked docs/zeropowers/plans/<plan>.json
+python3 skills/subagent-driven-development/scripts/feature-manager.py blocked openspec/changes/<dir>/plan.json
 ```
 
 Output:

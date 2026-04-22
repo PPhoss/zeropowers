@@ -43,10 +43,10 @@ cp "$PROMPT_FILE" "$OUTPUT_DIR/prompt.txt"
 
 # Create a minimal project directory for the test
 PROJECT_DIR="$OUTPUT_DIR/project"
-mkdir -p "$PROJECT_DIR/docs/zeropowers/plans"
+mkdir -p "$PROJECT_DIR/openspec/changes/auth"
 
 # Create a dummy plan file for mid-conversation tests
-cat > "$PROJECT_DIR/docs/zeropowers/plans/auth-system.json" << 'EOF'
+cat > "$PROJECT_DIR/openspec/changes/auth/plan.json" << 'EOF'
 {
   "title": "Auth System Implementation Plan",
   "tasks": [

@@ -103,43 +103,43 @@ digraph process {
 
 ```bash
 # Check progress
-python3 skills/subagent-driven-development/scripts/feature-manager.py status docs/zeropowers/plans/<plan>.json
+python3 skills/subagent-driven-development/scripts/feature-manager.py status openspec/changes/<dir>/plan.json
 
 # Get next feature to work on (respects dependencies)
-python3 skills/subagent-driven-development/scripts/feature-manager.py next docs/zeropowers/plans/<plan>.json
+python3 skills/subagent-driven-development/scripts/feature-manager.py next openspec/changes/<dir>/plan.json
 
 # Start a feature
-python3 skills/subagent-driven-development/scripts/feature-manager.py start docs/zeropowers/plans/<plan>.json <feature-id>
+python3 skills/subagent-driven-development/scripts/feature-manager.py start openspec/changes/<dir>/plan.json <feature-id>
 
 # Complete a feature
-python3 skills/subagent-driven-development/scripts/feature-manager.py complete docs/zeropowers/plans/<plan>.json <feature-id>
+python3 skills/subagent-driven-development/scripts/feature-manager.py complete openspec/changes/<dir>/plan.json <feature-id>
 
 # List blocked features
-python3 skills/subagent-driven-development/scripts/feature-manager.py blocked docs/zeropowers/plans/<plan>.json
+python3 skills/subagent-driven-development/scripts/feature-manager.py blocked openspec/changes/<dir>/plan.json
 ```
 
 ### Controller Workflow
 
 1. **Start of session:**
    ```bash
-   python3 skills/subagent-driven-development/scripts/feature-manager.py status docs/zeropowers/plans/auth.json
+   python3 skills/subagent-driven-development/scripts/feature-manager.py status openspec/changes/<dir>/plan.json
    ```
 
 2. **Get next feature:**
    ```bash
-   python3 skills/subagent-driven-development/scripts/feature-manager.py next docs/zeropowers/plans/auth.json
+   python3 skills/subagent-driven-development/scripts/feature-manager.py next openspec/changes/<dir>/plan.json
    # Returns: Feature with all dependencies met, in topological order
    ```
 
 3. **Start feature:**
    ```bash
-   python3 skills/subagent-driven-development/scripts/feature-manager.py start docs/zeropowers/plans/auth.json auth-002
+   python3 skills/subagent-driven-development/scripts/feature-manager.py start openspec/changes/<dir>/plan.json auth-002
    # Updates JSON: status → "in_progress"
    ```
 
 4. **Complete feature:**
    ```bash
-   python3 skills/subagent-driven-development/scripts/feature-manager.py complete docs/zeropowers/plans/auth.json auth-002
+   python3 skills/subagent-driven-development/scripts/feature-manager.py complete openspec/changes/<dir>/plan.json auth-002
    # Updates JSON: status → "done"
    ```
 
@@ -209,7 +209,7 @@ Implementer subagents report one of four statuses. Handle each appropriately:
 ```
 You: I'm using Subagent-Driven Development to execute this plan.
 
-$ python3 skills/subagent-driven-development/scripts/feature-manager.py status docs/zeropowers/plans/2026-04-03-auth.json
+$ python3 skills/subagent-driven-development/scripts/feature-manager.py status openspec/changes/auth/plan.json
 Feature List Status:
   Total: 5
   ✅ Done: 0
@@ -217,7 +217,7 @@ Feature List Status:
   ⏳ Pending: 5
   🚫 Blocked: 0
 
-$ python3 skills/subagent-driven-development/scripts/feature-manager.py next docs/zeropowers/plans/2026-04-03-auth.json
+$ python3 skills/subagent-driven-development/scripts/feature-manager.py next openspec/changes/auth/plan.json
 Next feature: auth-001
   Category: authentication
   Function: user-login
@@ -225,7 +225,7 @@ Next feature: auth-001
 
 Feature auth-001: User login
 
-$ python3 skills/subagent-driven-development/scripts/feature-manager.py start docs/zeropowers/plans/2026-04-03-auth.json auth-001
+$ python3 skills/subagent-driven-development/scripts/feature-manager.py start openspec/changes/auth/plan.json auth-001
 [Dispatch implementation subagent with feature data + context]
 
 Implementer: "Before I begin - should tokens expire after 1 hour or 24 hours?"
@@ -245,9 +245,9 @@ Spec reviewer: ✅ All 3 acceptance criteria met, nothing extra
 [Get git SHAs, dispatch code quality reviewer]
 Code reviewer: Strengths: Good test coverage, clean. Issues: None. Approved.
 
-$ python3 skills/subagent-driven-development/scripts/feature-manager.py complete docs/zeropowers/plans/2026-04-03-auth.json auth-001
+$ python3 skills/subagent-driven-development/scripts/feature-manager.py complete openspec/changes/auth/plan.json auth-001
 
-$ python3 skills/subagent-driven-development/scripts/feature-manager.py next docs/zeropowers/plans/2026-04-03-auth.json
+$ python3 skills/subagent-driven-development/scripts/feature-manager.py next openspec/changes/auth/plan.json
 Next feature: auth-002
   Category: authentication
   Function: token-refresh
@@ -255,7 +255,7 @@ Next feature: auth-002
 
 Feature auth-002: Token refresh
 
-$ python3 skills/subagent-driven-development/scripts/feature-manager.py start docs/zeropowers/plans/2026-04-03-auth.json auth-002
+$ python3 skills/subagent-driven-development/scripts/feature-manager.py start openspec/changes/auth/plan.json auth-002
 [Dispatch implementation subagent with feature data + context]
 
 Implementer: [No questions, proceeds]
@@ -285,12 +285,12 @@ Implementer: Extracted TOKEN_TTL_SECONDS constant
 [Code reviewer reviews again]
 Code reviewer: ✅ Approved
 
-$ python3 skills/subagent-driven-development/scripts/feature-manager.py complete docs/zeropowers/plans/2026-04-03-auth.json auth-002
+$ python3 skills/subagent-driven-development/scripts/feature-manager.py complete openspec/changes/auth/plan.json auth-002
 
 ...
 
 [After all features]
-$ python3 skills/subagent-driven-development/scripts/feature-manager.py status docs/zeropowers/plans/2026-04-03-auth.json
+$ python3 skills/subagent-driven-development/scripts/feature-manager.py status openspec/changes/auth/plan.json
 Feature List Status:
   Total: 5
   ✅ Done: 5

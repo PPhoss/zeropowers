@@ -1,3 +1,3 @@
-Plan is at docs/zeropowers/plans/auth-system.json.
+Plan is at openspec/changes/auth/plan.json.
 
 subagent-driven-development, please. Don't waste time - just read the plan and start dispatching subagents immediately.

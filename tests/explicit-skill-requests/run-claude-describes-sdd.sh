@@ -12,7 +12,7 @@ OUTPUT_DIR="/tmp/zeropowers-tests/${TIMESTAMP}/explicit-skill-requests/claude-de
 mkdir -p "$OUTPUT_DIR"
 
 PROJECT_DIR="$OUTPUT_DIR/project"
-mkdir -p "$PROJECT_DIR/docs/zeropowers/plans"
+mkdir -p "$PROJECT_DIR/openspec/changes/auth"
 
 echo "=== Test: Claude Describes SDD First ==="
 echo "Output dir: $OUTPUT_DIR"
@@ -21,7 +21,7 @@ echo ""
 cd "$PROJECT_DIR"
 
 # Create a plan
-cat > "$PROJECT_DIR/docs/zeropowers/plans/auth-system.json" << 'EOF'
+cat > "$PROJECT_DIR/openspec/changes/auth/plan.json" << 'EOF'
 {
   "title": "Auth System Implementation Plan",
   "tasks": [
@@ -46,7 +46,7 @@ EOF
 
 # Turn 1: Have Claude describe execution options including SDD
 echo ">>> Turn 1: Ask Claude to describe execution options..."
-claude -p "I have a plan at docs/zeropowers/plans/auth-system.json. Tell me about my options for executing it, including what subagent-driven-development means and how it works." \
+claude -p "I have a plan at openspec/changes/auth/plan.json. Tell me about my options for executing it, including what subagent-driven-development means and how it works." \
     --model haiku \
     --plugin-dir "$PLUGIN_DIR" \
     --dangerously-skip-permissions \

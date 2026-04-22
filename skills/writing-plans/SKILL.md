@@ -13,30 +13,49 @@ Output is a feature list JSON file that serves as the execution contract: agents
 
 **Announce at start:** "I'm using the writing-plans skill to create the implementation plan."
 
-**Save plans to:** `docs/zeropowers/plans/YYYY-MM-DD-<feature-name>.json`
-- (User preferences for plan location override this default)
+**Locate output dir:** Scan `openspec/changes/` to find the target change directory (created externally). If multiple exist, ask user which one. All output goes to `openspec/changes/<dir>/`.
+
+**Save plan to:** `openspec/changes/<dir>/plan.json`
 
 ## Spec Documents Location
 
-**REQUIRED:** Before writing any plan, read ALL spec documents in:
+**REQUIRED:** Before writing any plan, read ALL documents in the target change directory:
 ```
-project-root/zeropowers/specs/
-├── API.yaml             # API Specifications (Swagger 2.0)
-└── DATABASE.md          # Database Schema
+openspec/changes/<dir>/
+├── .openspec.yaml           # Change metadata
+├── design.md                # Overall design (IMPORTANT)
+├── proposal.md              # Change proposal (IMPORTANT)
+├── tasks.md                 # Task breakdown from external tool (read to inform plan)
+├── API.yaml                 # API Specifications (Swagger 2.0)
+├── DATABASE.md              # Database Schema
+└── specs/
+    ├── feature-a/
+    │   └── spec.md          # Per-feature spec (IMPORTANT)
+    ├── feature-b/
+    │   └── spec.md
+    └── ...
 ```
+
+**Read priority:**
+1. `design.md`, `proposal.md` — understand the full change scope
+2. `specs/*/spec.md` — each feature's specific requirements
+3. `tasks.md` — understand existing task decomposition, use to inform your plan
+4. `API.yaml`, `DATABASE.md` — technical interface contracts
 
 All planning decisions must reference specific sections/sentences from these specs. If no specs exist yet, use **REQUIRED BACKGROUND:** zeropowers:pre-dev-docs to generate them first.
 
 ## Spec Document Reference
 
-Each spec type serves a specific purpose in the planning pipeline:
+Each document type serves a specific purpose in the planning pipeline:
 
 | Document | Purpose | Key Content |
 |----------|---------|--------------|
-| API | Interface contract | Endpoints, auth, request/response formats |
-| Database | Data model | Schema, relationships, migrations |
-
-**Dependencies:** API → Database. API data models inform database schema design.
+| design.md | Overall architecture | System design, key decisions |
+| proposal.md | Change scope | What and why of this change |
+| specs/*/spec.md | Per-feature requirements | Detailed feature specs |
+| tasks.md | Task decomposition | Existing task breakdown |
+| API.yaml | Interface contract | Endpoints, auth, request/response formats |
+| DATABASE.md | Data model | Schema, relationships, migrations |
 
 ## Scope Check
 
@@ -88,7 +107,7 @@ This ordering ensures consumers can process features sequentially without re-sor
     ],
     "files": ["src/auth/login.ts", "tests/auth/login.test.ts"],
     "dependencies": [],
-    "spec_refs": ["API.yaml#POST /auth/login"],
+    "spec_refs": ["openspec/changes/<dir>/specs/user-auth/spec.md#login-flow", "openspec/changes/<dir>/API.yaml#POST /auth/login"],
     "status": "pending"
   }
 ]
@@ -105,7 +124,7 @@ This ordering ensures consumers can process features sequentially without re-sor
 | `acceptance_criteria` | yes | List of verifiable conditions. Spec reviewers check against these. |
 | `files` | yes | File paths this feature will create or modify. Must be specific paths, not patterns. |
 | `dependencies` | yes | List of feature IDs that must be completed first. Empty array if none. |
-| `spec_refs` | no | References to upstream spec documents (e.g. `API.yaml#POST /auth/login`, `DATABASE.md#users-table`) |
+| `spec_refs` | no | References to upstream spec documents with full paths (e.g. `openspec/changes/<dir>/specs/user-auth/spec.md#login-flow`, `openspec/changes/<dir>/API.yaml#POST /auth/login`) |
 | `status` | yes | `pending` / `in_progress` / `done` / `skipped` / `blocked`. Default: `pending` |
 
 ## Self-Review
@@ -126,7 +145,7 @@ If you find issues, fix them inline. No need to re-review — just fix and move 
 
 After saving the plan, offer execution choice:
 
-**"Plan complete and saved to `docs/zeropowers/plans/<filename>.json`. Two execution options:**
+**"Plan complete and saved to `openspec/changes/<dir>/plan.json`. Two execution options:**
 
 **1. Subagent-Driven (recommended)** - I dispatch a fresh subagent per feature, review between features, fast iteration
 

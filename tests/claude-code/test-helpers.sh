@@ -143,7 +143,7 @@ cleanup_test_project() {
 create_test_plan() {
     local project_dir="$1"
     local plan_name="${2:-test-plan}"
-    local plan_file="$project_dir/docs/zeropowers/plans/$plan_name.json"
+    local plan_file="$project_dir/openspec/changes/$plan_name/plan.json"
 
     mkdir -p "$(dirname "$plan_file")"
 

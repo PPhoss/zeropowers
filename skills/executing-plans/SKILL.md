@@ -16,13 +16,13 @@ Load the feature list JSON file, review critically, execute all features sequent
 ## The Process
 
 ### Step 1: Load and Review Plan
-1. Read the feature list JSON file from `docs/zeropowers/plans/`
+1. Read the feature list JSON file from `openspec/changes/<dir>/plan.json`
 2. Review critically — identify any questions or concerns about the features, dependencies, or acceptance criteria
 3. If concerns: Raise them with your human partner before starting
 4. If no concerns: Check status with feature script and proceed
 
    ```bash
-   python3 skills/subagent-driven-development/scripts/feature-manager.py status docs/zeropowers/plans/<plan>.json
+   python3 skills/subagent-driven-development/scripts/feature-manager.py status openspec/changes/<dir>/plan.json
    ```
 
 ### Step 2: Execute Features
@@ -31,10 +31,10 @@ Use the feature manager script to get and track features:
 
 ```bash
 # Get next feature (respects dependencies)
-python3 skills/subagent-driven-development/scripts/feature-manager.py next docs/zeropowers/plans/<plan>.json
+python3 skills/subagent-driven-development/scripts/feature-manager.py next openspec/changes/<dir>/plan.json
 
 # Mark feature as started
-python3 skills/subagent-driven-development/scripts/feature-manager.py start docs/zeropowers/plans/<plan>.json <feature-id>
+python3 skills/subagent-driven-development/scripts/feature-manager.py start openspec/changes/<dir>/plan.json <feature-id>
 ```
 
 Then for each feature:
@@ -45,7 +45,7 @@ Then for each feature:
 5. Mark feature as completed:
 
    ```bash
-   python3 skills/subagent-driven-development/scripts/feature-manager.py complete docs/zeropowers/plans/<plan>.json <feature-id>
+   python3 skills/subagent-driven-development/scripts/feature-manager.py complete openspec/changes/<dir>/plan.json <feature-id>
    ```
 
 ### Step 3: Complete Development

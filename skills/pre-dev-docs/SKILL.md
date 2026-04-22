@@ -75,10 +75,10 @@ Wait for approval. If changes requested, redo C→D.
 
 ## Document Order
 
-| Order | Document | Format | Template |
-|-------|----------|--------|----------|
-| 1 | API | Swagger 2.0 YAML | `references/template-api.yaml` |
-| 2 | Database | Markdown | `references/template-database.md` |
+| Order | Document    | Format | Template |
+|-------|-------------|--------|----------|
+| 1 | API.yaml    | Swagger 2.0 YAML | `references/template-api.yaml` |
+| 2 | Database.md | Markdown | `references/template-database.md` |
 
 **Always generate API first** — database schema depends on API data models.
 
