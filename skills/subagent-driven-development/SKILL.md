@@ -149,7 +149,7 @@ python3 skills/subagent-driven-development/scripts/feature-manager.py blocked do
 
 Controller provides:
 - Feature data (description, acceptance_criteria, files)
-- Spec references (paths like `docs/zeropowers/specs/PRD.md#2.1`)
+- Spec references (paths like `docs/zeropowers/specs/API.yaml#POST /auth/login`)
 - Context about dependencies and conventions
 
 Subagents decide:

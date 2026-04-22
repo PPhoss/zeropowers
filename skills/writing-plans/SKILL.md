@@ -21,11 +21,8 @@ Output is a feature list JSON file that serves as the execution contract: agents
 **REQUIRED:** Before writing any plan, read ALL spec documents in:
 ```
 project-root/zeropowers/specs/
-├── PRD.md              # Product Requirements Document
-├── ARCHITECTURE.md     # System Architecture
-├── API.md              # API Specifications
-├── DATABASE.md         # Database Schema
-└── DEV_PLAN.md         # Development Plan
+├── API.yaml             # API Specifications (Swagger 2.0)
+└── DATABASE.md          # Database Schema
 ```
 
 All planning decisions must reference specific sections/sentences from these specs. If no specs exist yet, use **REQUIRED BACKGROUND:** zeropowers:pre-dev-docs to generate them first.
@@ -36,13 +33,10 @@ Each spec type serves a specific purpose in the planning pipeline:
 
 | Document | Purpose | Key Content |
 |----------|---------|--------------|
-| PRD | Vision & requirements | Users, features, acceptance criteria |
-| Architecture | System design | Components, tech stack, security, scaling |
 | API | Interface contract | Endpoints, auth, request/response formats |
 | Database | Data model | Schema, relationships, migrations |
-| Dev Plan | Implementation roadmap | Phases, tasks, dependencies, risks |
 
-**Dependencies:** PRD → Architecture → API → Database → Dev Plan. Each builds on the previous.
+**Dependencies:** API → Database. API data models inform database schema design.
 
 ## Scope Check
 
@@ -94,7 +88,7 @@ This ordering ensures consumers can process features sequentially without re-sor
     ],
     "files": ["src/auth/login.ts", "tests/auth/login.test.ts"],
     "dependencies": [],
-    "spec_refs": ["PRD.md#2.1", "API.md#POST /auth/login"],
+    "spec_refs": ["API.yaml#POST /auth/login"],
     "status": "pending"
   }
 ]
@@ -111,7 +105,7 @@ This ordering ensures consumers can process features sequentially without re-sor
 | `acceptance_criteria` | yes | List of verifiable conditions. Spec reviewers check against these. |
 | `files` | yes | File paths this feature will create or modify. Must be specific paths, not patterns. |
 | `dependencies` | yes | List of feature IDs that must be completed first. Empty array if none. |
-| `spec_refs` | no | References to upstream spec documents (e.g. `PRD.md#2.1`, `API.md#POST /auth/login`) |
+| `spec_refs` | no | References to upstream spec documents (e.g. `API.yaml#POST /auth/login`, `DATABASE.md#users-table`) |
 | `status` | yes | `pending` / `in_progress` / `done` / `skipped` / `blocked`. Default: `pending` |
 
 ## Self-Review

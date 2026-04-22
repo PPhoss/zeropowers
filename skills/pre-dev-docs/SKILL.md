@@ -5,13 +5,12 @@ description: Use when users present a product idea or requirement before startin
 
 # Pre-Development Documentation
 
-Generate pre-dev docs iteratively: PRD → Architecture → API → Database → Dev Plan (not all required every project).
+Generate pre-dev docs iteratively: API (Swagger 2.0 YAML) → Database Design.
 
 ## Workflow
 
 1. **Understand** - Ask about vision, features, constraints. Skip if entering from brainstorming.
-2. **Classify** - Confirm project type, select docs from table below.
-3. **Check Existing** - Scan `docs/zeropowers/specs/` for existing docs. Ask: reuse/revise/regenerate?
+2. **Check Existing** - Scan `docs/zeropowers/specs/` for existing docs. Ask: reuse/revise/regenerate?
 
 ## Document Generation Loop
 
@@ -73,19 +72,20 @@ Present to user:
 
 Wait for approval. If changes requested, redo C→D.
 
-## Doc Selection by Project Type
+## Document Order
 
-| Type | PRD | Arch | API | DB | DevPlan |
-|------|-----|------|-----|-----|---------|
-| Web/Full-Stack/API/Mobile | ✓ | ✓ | ✓ | ✓ | ✓ |
-| CLI | ✓ | ✓ | ✗ | ✗ | ✓ |
-| Desktop | ✓ | ✓ | opt | opt | ✓ |
+| Order | Document | Format | Template |
+|-------|----------|--------|----------|
+| 1 | API | Swagger 2.0 YAML | `references/template-api.yaml` |
+| 2 | Database | Markdown | `references/template-database.md` |
+
+**Always generate API first** — database schema depends on API data models.
 
 ## Red Flags — STOP
 
 - **⚠️ No Self-Review table** → CRITICAL violation. Output table NOW.
 - **Generating all docs at once** → Must iterate with user feedback.
-- **Skipping PRD** → Architecture needs requirements foundation.
+- **Generating Database before API** → API data models inform schema design.
 
 ## Rationalizations
 
@@ -95,17 +95,8 @@ Wait for approval. If changes requested, redo C→D.
 | "It's straightforward" | Simple docs still have issues. Check anyway. |
 | "User will catch issues" | Your job is quality, not pushing work to user. |
 
-## Templates
-
-| Document | Template | Key Content |
-|----------|----------|-------------|
-| PRD | `references/template-prd.md` | Vision, users, features, acceptance criteria |
-| Architecture | `references/template-architecture.md` | Components, tech stack, security, scaling |
-| API | `references/template-api.md` | Endpoints, auth, request/response formats |
-| Database | `references/template-database.md` | Schema, relationships, migrations |
-| Dev Plan | `references/template-dev-plan.md` | Phases, tasks, dependencies, risks |
-
 ## Output
 ```
-docs/zeropowers/specs/{PRD,ARCHITECTURE,API,DATABASE,DEV_PLAN}.md
+docs/zeropowers/specs/API.yaml
+docs/zeropowers/specs/DATABASE.md
 ```
