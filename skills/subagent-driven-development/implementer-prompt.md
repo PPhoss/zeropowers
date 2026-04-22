@@ -31,9 +31,9 @@ Task tool (general-purpose):
     [If feature.spec_refs exists and is non-empty]
 
     This feature references the following spec sections:
-    [feature.spec_refs — one per line, formatted as "docs/zeropowers/specs/FILE.md#SECTION"]
+    [feature.spec_refs — one per line, formatted as "openspec/changes/<dir>/FILE.md#SECTION"]
 
-    **Lazy Loading:** You have access to the full specs at docs/zeropowers/specs/.
+    **Lazy Loading:** You have access to the full specs at openspec/changes/<dir>/.
     Read them ONLY if:
     - Acceptance criteria are unclear or ambiguous
     - You need to understand the broader system context

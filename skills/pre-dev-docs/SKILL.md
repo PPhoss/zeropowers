@@ -10,7 +10,8 @@ Generate pre-dev docs iteratively: API (Swagger 2.0 YAML) → Database Design.
 ## Workflow
 
 1. **Understand** - Ask about vision, features, constraints. Skip if entering from brainstorming.
-2. **Check Existing** - Scan `docs/zeropowers/specs/` for existing docs. Ask: reuse/revise/regenerate?
+2. **Locate Output Dir** - Scan `openspec/changes/` for the target subdirectory (created externally). If multiple exist, ask user which one to use. This is where all generated docs will be written.
+3. **Check Existing** - Check if the target subdirectory already contains docs. Ask: reuse/revise/regenerate?
 
 ## Document Generation Loop
 
@@ -97,6 +98,6 @@ Wait for approval. If changes requested, redo C→D.
 
 ## Output
 ```
-docs/zeropowers/specs/API.yaml
-docs/zeropowers/specs/DATABASE.md
+openspec/changes/<discovered-dir>/API.yaml
+openspec/changes/<discovered-dir>/DATABASE.md
 ```
