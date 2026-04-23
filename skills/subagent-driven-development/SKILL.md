@@ -208,6 +208,8 @@ Implementer subagents report one of four statuses. Handle each appropriately:
 - `./spec-reviewer-prompt.md` - Dispatch spec compliance reviewer subagent
 - `./code-quality-reviewer-prompt.md` - Dispatch code quality reviewer subagent
 
+**CRITICAL: TDD is mandatory for every implementer subagent.** When dispatching an implementer, you MUST include in the prompt an explicit instruction to invoke `zeropowers:test-driven-development` via the Skill tool before writing any code. Do not assume the template alone will be followed — reinforce this in your dispatch prompt.
+
 ## Example Workflow
 
 ```
@@ -332,24 +334,6 @@ Done!
 - Review loops ensure fixes actually work
 - Acceptance criteria prevent over/under-building
 - Code quality ensures implementation is well-built
-
-**TDD Verification (Three-Layer):**
-
-1. **Spec Compliance Reviewer** - Verify tests exist for each acceptance criterion
-   - Maps each criterion to at least one test
-   - Checks test quality (behavior vs implementation)
-   - Flags untested edge cases
-
-2. **Code Quality Reviewer** - Run coverage analysis
-   - Executes coverage tool (npm test --coverage, pytest --cov, etc.)
-   - Enforces 80% minimum coverage for new code
-   - Identifies uncovered lines in changed files
-   - Verifies tests actually verify behavior (not just hit lines)
-
-3. **Coverage Evidence** - Require proof before approval
-   - Spec reviewer confirms: "Each criterion has test coverage"
-   - Code reviewer confirms: "Coverage ≥ 80%, uncovered lines identified"
-   - Both must pass before feature marked done
 
 **TDD Verification (Three-Layer):**
 
