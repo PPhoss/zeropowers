@@ -13,32 +13,6 @@ Execute the feature list JSON file by dispatching fresh subagent per feature, wi
 
 **Dependency ordering:** Features in the JSON array are pre-sorted in topological order (dependencies before dependents). Process them in array order. Skip any feature whose dependencies are not yet `done` — come back to it after its dependencies are resolved.
 
-## When to Use
-
-```dot
-digraph when_to_use {
-    "Have feature list JSON?" [shape=diamond];
-    "Features mostly independent?" [shape=diamond];
-    "Stay in this session?" [shape=diamond];
-    "subagent-driven-development" [shape=box];
-    "executing-plans" [shape=box];
-    "Manual execution or brainstorm first" [shape=box];
-
-    "Have feature list JSON?" -> "Features mostly independent?" [label="yes"];
-    "Have feature list JSON?" -> "Manual execution or brainstorm first" [label="no"];
-    "Features mostly independent?" -> "Stay in this session?" [label="yes"];
-    "Features mostly independent?" -> "Manual execution or brainstorm first" [label="no - tightly coupled"];
-    "Stay in this session?" -> "subagent-driven-development" [label="yes"];
-    "Stay in this session?" -> "executing-plans" [label="no - parallel session"];
-}
-```
-
-**vs. Executing Plans (parallel session):**
-- Same session (no context switch)
-- Fresh subagent per feature (no context pollution)
-- Two-stage review after each feature: spec compliance first, then code quality
-- Faster iteration (no human-in-loop between features)
-
 ## The Process
 
 ```dot
@@ -118,31 +92,6 @@ python3 skills/subagent-driven-development/scripts/feature-manager.py complete o
 python3 skills/subagent-driven-development/scripts/feature-manager.py blocked openspec/changes/<dir>/plan.json
 ```
 
-### Controller Workflow
-
-1. **Start of session:**
-   ```bash
-   python3 skills/subagent-driven-development/scripts/feature-manager.py status openspec/changes/<dir>/plan.json
-   ```
-
-2. **Get next feature:**
-   ```bash
-   python3 skills/subagent-driven-development/scripts/feature-manager.py next openspec/changes/<dir>/plan.json
-   # Returns: Feature with all dependencies met, in topological order
-   ```
-
-3. **Start feature:**
-   ```bash
-   python3 skills/subagent-driven-development/scripts/feature-manager.py start openspec/changes/<dir>/plan.json auth-002
-   # Updates JSON: status → "in_progress"
-   ```
-
-4. **Complete feature:**
-   ```bash
-   python3 skills/subagent-driven-development/scripts/feature-manager.py complete openspec/changes/<dir>/plan.json auth-002
-   # Updates JSON: status → "done"
-   ```
-
 ## Document Loading Strategy
 
 **Hybrid approach: mandatory docs + lazy-loaded specs.**
@@ -169,21 +118,6 @@ Subagents decide:
 
 **Controller's job:** Tell subagents the mandatory file paths and the spec reference paths. Subagents read mandatory docs first, then lazy-load other specs as needed.
 
-## Model Selection
-
-Use the least powerful model that can handle each role to conserve cost and increase speed.
-
-**Mechanical implementation features** (isolated functions, clear acceptance criteria, 1-2 files): use a fast, cheap model. Most implementation features are mechanical when the criteria are well-specified.
-
-**Integration and judgment features** (multi-file coordination, pattern matching, debugging): use a standard model.
-
-**Architecture, design, and review features**: use the most capable available model.
-
-**Feature complexity signals:**
-- Touches 1-2 files with complete acceptance criteria → cheap model
-- Touches multiple files with integration concerns → standard model
-- Requires design judgment or broad codebase understanding → most capable model
-
 ## Handling Implementer Status
 
 Implementer subagents report one of four statuses. Handle each appropriately:
@@ -208,7 +142,65 @@ Implementer subagents report one of four statuses. Handle each appropriately:
 - `./spec-reviewer-prompt.md` - Dispatch spec compliance reviewer subagent
 - `./code-quality-reviewer-prompt.md` - Dispatch code quality reviewer subagent
 
-**CRITICAL: TDD is mandatory for every implementer subagent.** When dispatching an implementer, you MUST include in the prompt an explicit instruction to invoke `zeropowers:test-driven-development` via the Skill tool before writing any code. Do not assume the template alone will be followed — reinforce this in your dispatch prompt.
+### Implementer Dispatch Checklist
+
+When dispatching an implementer subagent, you MUST include ALL of the following sections in the prompt. No section is optional. No section may be omitted regardless of perceived simplicity:
+
+| # | Section | Source | Required |
+|---|---------|--------|----------|
+| 1 | Feature Description | `feature.description` | ALWAYS |
+| 2 | Acceptance Criteria | `feature.acceptance_criteria` | ALWAYS |
+| 3 | Files | `feature.files` | ALWAYS |
+| 4 | Context (scene-setting) | Your knowledge of project | ALWAYS |
+| 5 | Mandatory Documents | design.md + proposal.md paths | ALWAYS |
+| 6 | Spec References | `feature.spec_refs` (if non-empty) | ALWAYS when present |
+| 7 | TDD Instruction | Explicit instruction to invoke skill | ALWAYS |
+| 8 | Before You Begin | Ask questions first | ALWAYS |
+| 9 | Code Organization | File responsibility guidelines | ALWAYS |
+| 10 | Self-Review | Completeness/quality/discipline check | ALWAYS |
+| 11 | Report Format | Status + changes + findings | ALWAYS |
+
+**Common violations to avoid:**
+- Omitting Spec References because "the acceptance criteria are clear enough" — include them anyway
+- Omitting TDD Instruction because "this feature is trivial" — TDD is ALWAYS mandatory, no exceptions
+- Omitting Mandatory Documents because "the subagent can figure it out" — it cannot
+- Condensing multiple sections into a short paragraph — use the full template structure
+
+### Review Dispatch Rules
+
+Every feature goes through exactly TWO review subagents. No shortcuts. No combining. No skipping.
+
+```
+Implementer completes feature
+        │
+        ▼
+┌─────────────────────────┐
+│ 1. Spec Compliance      │  MUST dispatch via ./spec-reviewer-prompt.md
+│    Review Subagent      │  Controller CANNOT do this itself
+└────────┬────────────────┘
+         │ (pass only)
+         ▼
+┌─────────────────────────┐
+│ 2. Code Quality         │  MUST dispatch via ./code-quality-reviewer-prompt.md
+│    Review Subagent      │  Controller CANNOT do this itself
+└────────┬────────────────┘
+         │ (pass only)
+         ▼
+    Mark feature as done
+```
+
+**Each review is a separate subagent dispatch.** This means exactly 3 subagent dispatches per feature: 1 implementer + 1 spec reviewer + 1 code quality reviewer.
+
+**The controller MUST NOT:**
+- Review the implementer's work itself by reading the changed files and forming an opinion
+- Skip spec review because "the feature looks straightforward"
+- Skip code quality review because "spec review already passed" — these check different things
+- Skip code quality review because "the implementer did a good self-review" — self-review is not a substitute
+- Combine spec review and code quality review into one subagent dispatch
+- Proceed to the next feature without both reviews passing
+- Decide a feature is "too simple" to need both reviews — every feature gets both, always
+
+**Review order is fixed:** Spec compliance first → Code quality second. Never reverse or skip.
 
 ## Example Workflow
 
@@ -308,62 +300,12 @@ Final reviewer: All requirements met, ready to merge
 Done!
 ```
 
-## Advantages
-
-**vs. Manual execution:**
-- Subagents follow TDD naturally
-- Fresh context per feature (no confusion)
-- Parallel-safe (subagents don't interfere)
-- Subagent can ask questions (before AND during work)
-
-**vs. Executing Plans:**
-- Same session (no handoff)
-- Continuous progress (no waiting)
-- Review checkpoints automatic
-
-**Efficiency gains:**
-- No file reading overhead (controller provides feature data)
-- Controller curates exactly what context is needed
-- Subagent gets complete information upfront
-- Questions surfaced before work begins (not after)
-- JSON status persists across sessions — interrupted work resumes cleanly
-
-**Quality gates:**
-- Self-review catches issues before handoff
-- Two-stage review: spec compliance, then code quality
-- Review loops ensure fixes actually work
-- Acceptance criteria prevent over/under-building
-- Code quality ensures implementation is well-built
-
-**TDD Verification (Three-Layer):**
-
-1. **Spec Compliance Reviewer** - Verify tests exist for each acceptance criterion
-   - Maps each criterion to at least one test
-   - Checks test quality (behavior vs implementation)
-   - Flags untested edge cases
-
-2. **Code Quality Reviewer** - Run coverage analysis
-   - Executes coverage tool (npm test --coverage, pytest --cov, etc.)
-   - Enforces 80% minimum coverage for new code
-   - Identifies uncovered lines in changed files
-   - Verifies tests actually verify behavior (not just hit lines)
-
-3. **Coverage Evidence** - Require proof before approval
-   - Spec reviewer confirms: "Each criterion has test coverage"
-   - Code reviewer confirms: "Coverage ≥ 80%, uncovered lines identified"
-   - Both must pass before feature marked done
-
-**Cost:**
-- More subagent invocations (implementer + 2 reviewers per feature)
-- Controller does more prep work (extracting all features upfront)
-- Review loops add iterations
-- But catches issues early (cheaper than debugging later)
-
 ## Red Flags
 
 **Never:**
 - Start implementation on main/master branch without explicit user consent
-- Skip reviews (spec compliance OR code quality)
+- Review the implementer's work yourself instead of dispatching review subagents
+- Skip spec compliance review OR code quality review — both are mandatory, both require separate subagent dispatches
 - Proceed with unfixed issues
 - Dispatch multiple implementation subagents in parallel (conflicts)
 - Make subagent read feature list JSON file (provide feature data instead)
@@ -375,6 +317,9 @@ Done!
 - **Start code quality review before spec compliance is ✅** (wrong order)
 - Move to next feature while either review has open issues
 - Forget to update feature status in JSON after completion
+- **Omit any section from the implementer dispatch prompt** (use the checklist)
+- **Decide TDD is not needed for a feature** — TDD is always mandatory, no exceptions
+- **Skip Spec References in implementer prompt** because "it's simple enough"
 
 **If subagent asks questions:**
 - Answer clearly and completely
