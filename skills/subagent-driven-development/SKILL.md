@@ -195,6 +195,7 @@ Implementer completes feature
 - Review the implementer's work itself by reading the changed files and forming an opinion
 - Skip spec review because "the feature looks straightforward"
 - Skip code quality review because "spec review already passed" — these check different things
+- Skip code quality review because "the feature is simple" — simple features still need code quality review
 - Skip code quality review because "the implementer did a good self-review" — self-review is not a substitute
 - Combine spec review and code quality review into one subagent dispatch
 - Proceed to the next feature without both reviews passing
