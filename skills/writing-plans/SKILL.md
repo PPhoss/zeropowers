@@ -17,9 +17,54 @@ Output is a feature list JSON file that serves as the execution contract: agents
 
 **Save plan to:** `openspec/changes/<dir>/plan.json`
 
-## Spec Documents Location
+## OpenSpec Directory Structure
 
-**REQUIRED:** Before writing any plan, read ALL documents in the target change directory:
+Before writing any plan, you MUST understand the three zones of the openspec directory. Each zone has a different role and different authority:
+
+```
+openspec/
+├── specs/                          # Zone 1: Main Specs (ALREADY IMPLEMENTED)
+│   ├── feature-a/
+│   │   └── spec.md
+│   ├── feature-b/
+│   │   └── spec.md
+│   └── ...
+├── changes/
+│   ├── <active-change>/            # Zone 2: Active Change (THIS IS WHAT WE'RE PLANNING)
+│   │   ├── .openspec.yaml
+│   │   ├── design.md
+│   │   ├── proposal.md
+│   │   ├── tasks.md
+│   │   ├── API.yaml
+│   │   ├── DATABASE.md
+│   │   ├── specs/
+│   │   │   └── ...
+│   │   └── plan.json               # ← Your output goes here
+│   └── archive/                    # Zone 3: Archived Changes (ALREADY IMPLEMENTED)
+│       ├── YYYY-MM-DD-<change-name>/
+│       │   ├── API.yaml
+│       │   ├── DATABASE.md
+│       │   ├── design.md
+│       │   ├── plan.json
+│       │   ├── proposal.md
+│       │   ├── specs/
+│       │   │   └── ...
+│       │   └── tasks.md
+│       └── ...
+└── config.yaml
+```
+
+### Zone Authority
+
+| Zone | Path | Status | How to Use |
+|------|------|--------|------------|
+| **Main Specs** | `openspec/specs/` | **Already implemented** | Source of truth for existing system behavior. These specs are synchronized from completed changes. Your plan must be compatible with these. Do NOT re-plan anything already defined here. |
+| **Active Change** | `openspec/changes/<dir>/` | **To be implemented** | This is the PRIMARY input. Everything in this directory is new work that needs a plan. This is what you are planning right now. |
+| **Archived Changes** | `openspec/changes/archive/` | **Already implemented** | Historical record of completed work. Reference for context on past decisions, but these features are DONE. Do NOT include archived work in your plan. |
+
+### Reading Strategy
+
+**Step 1 — Read the active change (PRIMARY):**
 ```
 openspec/changes/<dir>/
 ├── .openspec.yaml           # Change metadata
@@ -31,18 +76,32 @@ openspec/changes/<dir>/
 └── specs/
     ├── feature-a/
     │   └── spec.md          # Per-feature spec (IMPORTANT)
-    ├── feature-b/
-    │   └── spec.md
     └── ...
 ```
 
-**Read priority:**
+Read priority for the active change:
 1. `design.md`, `proposal.md` — understand the full change scope
 2. `specs/*/spec.md` — each feature's specific requirements
 3. `tasks.md` — understand existing task decomposition, use to inform your plan
 4. `API.yaml`, `DATABASE.md` — technical interface contracts
 
 All planning decisions must reference specific sections/sentences from these specs. If no specs exist yet, use **REQUIRED BACKGROUND:** zeropowers:pre-dev-docs to generate them first.
+
+**Step 2 — Read main specs (CONTEXT):**
+
+Scan `openspec/specs/` to understand what already exists in the system. These represent implemented requirements. Your plan must:
+- Be compatible with existing specs
+- Not duplicate or conflict with already-implemented behavior
+- Reference existing specs where the new change extends or modifies them
+
+**Step 3 — Skim archived changes (OPTIONAL, only if needed):**
+
+Look at `openspec/changes/archive/` when you need:
+- Historical context on why past decisions were made
+- Understanding of implementation patterns already established
+- Clarity on how previous changes structured their plans
+
+Do NOT plan features for anything found in archive — it's already built.
 
 ## Spec Document Reference
 
