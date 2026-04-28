@@ -60,9 +60,6 @@ digraph process {
     "Implementer subagent fixes quality issues" -> "Dispatch code quality reviewer subagent (./code-quality-reviewer-prompt.md)" [label="re-review"];
     "Code quality reviewer approves?" -> "Mark feature as 'done' via script" [label="yes"];
     "Mark feature as 'done' via script" -> "Get next feature via script";
-    "Get next feature via script" -> "More pending features?" [label="check next"];
-    "More pending features?" -> "Mark feature as 'in_progress' via script" [label="yes"];
-    "More pending features?" -> "Dispatch final code reviewer subagent for entire implementation" [label="no"];
     "Dispatch final code reviewer subagent for entire implementation" -> "Use zeropowers:finishing-a-development-branch";
 }
 ```
@@ -170,25 +167,6 @@ When dispatching an implementer subagent, you MUST include ALL of the following 
 
 Every feature goes through exactly TWO review subagents. No shortcuts. No combining. No skipping.
 
-```
-Implementer completes feature
-        │
-        ▼
-┌─────────────────────────┐
-│ 1. Spec Compliance      │  MUST dispatch via ./spec-reviewer-prompt.md
-│    Review Subagent      │  Controller CANNOT do this itself
-└────────┬────────────────┘
-         │ (pass only)
-         ▼
-┌─────────────────────────┐
-│ 2. Code Quality         │  MUST dispatch via ./code-quality-reviewer-prompt.md
-│    Review Subagent      │  Controller CANNOT do this itself
-└────────┬────────────────┘
-         │ (pass only)
-         ▼
-    Mark feature as done
-```
-
 **Each review is a separate subagent dispatch.** This means exactly 3 subagent dispatches per feature: 1 implementer + 1 spec reviewer + 1 code quality reviewer.
 
 **The controller MUST NOT:**
@@ -202,6 +180,8 @@ Implementer completes feature
 - Decide a feature is "too simple" to need both reviews — every feature gets both, always
 
 **Review order is fixed:** Spec compliance first → Code quality second. Never reverse or skip.
+
+**Code quality review is absolutely mandatory.** Every feature, without exception, must pass through a dedicated code quality reviewer subagent before being marked as done. There are no valid reasons to skip it — not simplicity, not spec review passing, not implementer self-review quality, not time pressure. A feature is NOT done until both spec review AND code quality review have passed. If you find yourself about to mark a feature as done without having dispatched a code quality reviewer subagent, stop and dispatch one now.
 
 ## Example Workflow
 
